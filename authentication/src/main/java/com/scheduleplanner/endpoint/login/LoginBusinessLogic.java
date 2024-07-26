@@ -1,7 +1,7 @@
-package com.scheduleplanner.login;
-import com.scheduleplanner.dataaccesslayer.operations.authorization.AccountHandler;
-import com.scheduleplanner.login.dto.AccountInDto;
-import com.scheduleplanner.login.dto.TokenOutDto;
+package com.scheduleplanner.endpoint.login;
+import com.scheduleplanner.endpoint.login.dto.AccountInDto;
+import com.scheduleplanner.endpoint.login.dto.TokenOutDto;
+import com.scheduleplanner.gateway.store.AccountHandler;
 import com.scheduleplanner.secret.Encrypt;
 import com.sheduleplanner.common.exception.baseexception.handled.WrongDataException;
 import com.scheduleplanner.secret.TokenService;

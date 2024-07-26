@@ -17,7 +17,6 @@
     <modules>
         <module>common</module>
         <module>authentication</module>
-        <module>data-access-layer</module>
         <module>planning-core</module>
     </modules>
     <properties>
@@ -33,16 +32,12 @@
         <maven.compiler.version>3.13.0</maven.compiler.version>
         <flyway.maven.plugin.version>10.16.0</flyway.maven.plugin.version>
         <spring.security.version>6.3.1</spring.security.version>
+        <javax.annotation.api.version>1.3.2</javax.annotation.api.version> <!--TODO utánanázni van e frissebb -->
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -106,16 +101,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <version>${flyway.maven.plugin.version}</version>
-                <configuration>
-                    <configFiles>
-                        <configFile>src/test/resources/flyway.conf</configFile>
-                    </configFiles>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
                 <version>${pitest.version}</version>
@@ -126,9 +111,11 @@
                     <excludedClasses>
                         <param>com.scheduleplanner.AuthenticationApplication</param>
                         <param>com.sheduleplanner.common.log.*</param>
+                        <param>com.scheduleplanner.*Config</param>
                     </excludedClasses>
                     <targetTests>
                         <param>com.scheduleplanner.*</param>
+                        <param>integrationtest.*</param>
                     </targetTests>
                 </configuration>
             </plugin>

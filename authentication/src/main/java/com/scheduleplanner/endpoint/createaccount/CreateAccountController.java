@@ -1,6 +1,6 @@
-package com.scheduleplanner.createaccount;
+package com.scheduleplanner.endpoint.createaccount;
 
-import com.scheduleplanner.createaccount.dto.AccountInDto;
+import com.scheduleplanner.secret.AccountInDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

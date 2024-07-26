@@ -1,11 +1,12 @@
 package com.scheduleplanner;
 
-import com.scheduleplanner.createaccount.CreateAccountBusinessLogic;
-import com.scheduleplanner.dataaccesslayer.config.DatabaseProperties;
-import com.scheduleplanner.dataaccesslayer.operations.authorization.AccountHandler;
-import com.scheduleplanner.login.LoginBusinessLogic;
+import com.scheduleplanner.endpoint.createaccount.CreateAccountBusinessLogic;
+import com.scheduleplanner.gateway.store.AccountHandler;
+import com.scheduleplanner.endpoint.login.LoginBusinessLogic;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class Config {
@@ -21,12 +22,8 @@ public class Config {
     }
 
     @Bean
-    public AccountHandler accountHandler() {
-        return new AccountHandler(databaseProperties());
+    public AccountHandler accountHandler(DataSource dataSource) {
+        return new AccountHandler(dataSource);
     }
 
-    @Bean
-    public DatabaseProperties databaseProperties() {
-        return new DatabaseProperties();
-    }
 }

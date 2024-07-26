@@ -1,6 +1,6 @@
-package com.scheduleplanner.login;
-import com.scheduleplanner.login.dto.AccountInDto;
-import com.scheduleplanner.login.dto.TokenOutDto;
+package com.scheduleplanner.endpoint.login;
+import com.scheduleplanner.endpoint.login.dto.AccountInDto;
+import com.scheduleplanner.endpoint.login.dto.TokenOutDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

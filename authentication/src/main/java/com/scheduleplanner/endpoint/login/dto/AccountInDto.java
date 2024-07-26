@@ -1,4 +1,4 @@
-package com.scheduleplanner.login.dto;
+package com.scheduleplanner.endpoint.login.dto;
 
 public record AccountInDto(
         String id,  //email or username

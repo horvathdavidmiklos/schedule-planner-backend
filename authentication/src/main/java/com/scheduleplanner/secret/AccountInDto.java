@@ -1,4 +1,4 @@
-package com.scheduleplanner.createaccount.dto;
+package com.scheduleplanner.secret;
 
 public record AccountInDto(String username,
                            String email,

@@ -1,13 +1,8 @@
 spring:
-  application:
-    name: schedule-planner-authentication
+  datasource:
+    url: "jdbc:mysql://horvathdavidmiklos.hu:3306/schedule_planner"
+    username: "root"
+    password: "Schedule_planner2024"
+    driver-class-name: "com.mysql.cj.jdbc.Driver"
   flyway:
-    enabled: true
-
-database:
-  url: horvathdavidmiklos.hu
-  port: 3306
-  schema: schedule_planner
-  username: root
-  password: Schedule_planner2024
-
+    enabled: false

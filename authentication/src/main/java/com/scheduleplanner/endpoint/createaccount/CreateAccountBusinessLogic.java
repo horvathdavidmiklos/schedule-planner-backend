@@ -1,13 +1,14 @@
-package com.scheduleplanner.createaccount;
+package com.scheduleplanner.endpoint.createaccount;
 
 
-import com.scheduleplanner.createaccount.dto.AccountInDto;
+import com.scheduleplanner.secret.AccountInDto;
 import com.scheduleplanner.secret.Encrypt;
 import com.sheduleplanner.common.entity.NewAccount;
+import com.sheduleplanner.common.exception.baseexception.handled.EmptyFieldException;
 import com.sheduleplanner.common.exception.baseexception.handled.NotSupportedFormatException;
 import com.sheduleplanner.common.exception.baseexception.handled.PasswordNotMatchingException;
 import com.sheduleplanner.common.exception.baseexception.handled.ValueNotUniqueException;
-import com.scheduleplanner.dataaccesslayer.operations.authorization.AccountHandler;
+import com.scheduleplanner.gateway.store.AccountHandler;
 import com.sheduleplanner.common.log.LogMethod;
 import com.sheduleplanner.common.log.SensitiveData;
 
@@ -15,6 +16,8 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 import java.time.LocalDateTime;
+
+import static java.util.Objects.isNull;
 
 public class CreateAccountBusinessLogic {
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
@@ -27,6 +30,7 @@ public class CreateAccountBusinessLogic {
 
     @LogMethod
     public void runLogic(@SensitiveData AccountInDto dto) {
+        checkNonNull(dto);
         checkRegex(dto);
         checkUnique(dto);
         passwordMatch(dto.password(),dto.passwordConfirmation());
@@ -36,6 +40,12 @@ public class CreateAccountBusinessLogic {
                 .username(dto.username())
                 .createdAt(LocalDateTime.now());
         accountHandler.save(account);
+    }
+
+    private void checkNonNull(AccountInDto dto) {
+        if(isNull(dto) || isNull(dto.email()) || isNull(dto.username()) || isNull(dto.password()) || isNull(dto.passwordConfirmation())){
+            throw new EmptyFieldException();
+        }
     }
 
     private void checkUnique(AccountInDto dto) {

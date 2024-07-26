@@ -1,13 +1,13 @@
-package com.scheduleplanner.dataaccesslayer.operations.authorization;
+package com.scheduleplanner.gateway.store;
 
-import com.scheduleplanner.dataaccesslayer.config.DatabaseProperties;
-import com.scheduleplanner.dataaccesslayer.exception.UnknownSqlException;
-import com.scheduleplanner.dataaccesslayer.operations.BaseConnection;
+import com.sheduleplanner.common.repository.BaseConnection;
 import com.sheduleplanner.common.entity.Account;
 import com.sheduleplanner.common.entity.NewAccount;
 import com.sheduleplanner.common.exception.baseexception.handled.ValueNotUniqueException;
+import com.sheduleplanner.common.exception.baseexception.unhandled.UnknownSqlException;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,8 +25,8 @@ public class AccountHandler extends BaseConnection {
     private final static String FIND_ACCOUNT_BY_USERNAME_SQL = "SELECT username,password_hash FROM account WHERE username =?";
 
 
-    public AccountHandler(DatabaseProperties databaseProperties) {
-        super(databaseProperties);
+    public AccountHandler(DataSource dataSource) {
+        super(dataSource);
     }
 
     public void save(NewAccount account) {
@@ -36,11 +36,7 @@ public class AccountHandler extends BaseConnection {
             stmt.setString(2, account.username());
             stmt.setString(3, account.passwordHash());
             stmt.setTimestamp(4, java.sql.Timestamp.valueOf(account.createdAt()));
-
-            int affectedRows = stmt.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("Creating account failed, no rows affected.");
-            }
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new UnknownSqlException(e);
         }
@@ -55,7 +51,7 @@ public class AccountHandler extends BaseConnection {
         return isUnique(IS_UNIQUE_EMAIL_SQL, email);
     }
 
-    public boolean isUnique(String sql,String field){
+    public boolean isUnique(String sql, String field) {
         try (Connection connection = createConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, field);
@@ -88,7 +84,8 @@ public class AccountHandler extends BaseConnection {
                     return new Account()
                             .username(rs.getString("username"))
                             .passwordHash(rs.getString("password_hash"));
-                } return null;
+                }
+                return null;
             }
         } catch (SQLException e) {
             throw new UnknownSqlException(e);
