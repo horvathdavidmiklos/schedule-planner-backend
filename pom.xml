@@ -54,10 +54,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-mysql</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
@@ -110,7 +106,7 @@
                     </targetClasses>
                     <excludedClasses>
                         <param>com.scheduleplanner.AuthenticationApplication</param>
-                        <param>com.sheduleplanner.common.log.*</param>
+                        <param>com.scheduleplanner.common.log.*</param>
                         <param>com.scheduleplanner.*Config</param>
                     </excludedClasses>
                     <targetTests>

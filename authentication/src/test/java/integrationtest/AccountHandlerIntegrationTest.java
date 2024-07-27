@@ -1,7 +1,8 @@
 package integrationtest;
 
-import com.sheduleplanner.common.entity.Account;
-import com.sheduleplanner.common.entity.NewAccount;
+import com.scheduleplanner.gateway.store.AccountHandler;
+import com.scheduleplanner.common.entity.Account;
+import com.scheduleplanner.common.entity.NewAccount;
 import integrationtest.mock.DataStructureFake;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import com.scheduleplanner.gateway.store.AccountHandler;
+import com.scheduleplanner.gateway.store.AccountHandlerImpl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,7 +29,7 @@ class AccountHandlerIntegrationTest {
     @BeforeEach
     void setup(){
         H2DbHelper.createAll(DataStructureFake.createConnection());
-        accountHandler = new AccountHandler(new DataStructureFake());
+        accountHandler = new AccountHandlerImpl(new DataStructureFake());
     }
 
     @AfterEach
@@ -37,8 +38,7 @@ class AccountHandlerIntegrationTest {
     }
 
 
-    @Test
-    void test_saveAccount() throws SQLException {
+    @Test void test_saveAccount() throws SQLException {
         checkAccountUniqueness(true,TEST_EMAIL,TEST_USER);
         checkAccountIsNullInEmptyDb();
         accountHandler.save(createAccount());
