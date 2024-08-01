@@ -24,11 +24,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get version from pom.xml
+      - name: Get project version
         id: get_version
         run: |
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Upload JAR to WebDAV
         run: |
@@ -38,3 +38,7 @@ jobs:
         env:
           WEBDAV_USER: ${{ secrets.WEBDAV_USER }}
           WEBDAV_PASSWORD: ${{ secrets.WEBDAV_PASSWORD }}
+
+
+
+
