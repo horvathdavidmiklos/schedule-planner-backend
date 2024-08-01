@@ -16,6 +16,13 @@
         </repository>
     </distributionManagement>
 
+    <scm>
+        <connection>scm:git:https://github.com/horvathdavidmiklos/schedule-planner-backend.git</connection>
+        <developerConnection>scm:git:git@github.com:horvathdavidmiklos/schedule-planner-backend.git</developerConnection>
+        <url>https://github.com/horvathdavidmiklos/schedule-planner-backend</url>
+        <tag>HEAD</tag>
+    </scm>
+
 
     <groupId>com</groupId>
     <artifactId>scheduleplanner</artifactId>
