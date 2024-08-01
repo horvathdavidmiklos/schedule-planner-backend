@@ -29,19 +29,6 @@ jobs:
         id: read_version
         run: echo "::set-output name=VERSION::$(cat VERSION)"
 
-      - name: Set project version in all pom.xml files
-        run: mvn versions:set -DnewVersion=${{ steps.read_version.outputs.VERSION }} -DgenerateBackupPoms=false
-
-      - name: Commit version change
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git add .
-          git commit -m "Update version to ${{ steps.read_version.outputs.VERSION }}"
-          git push origin HEAD:${{ github.ref }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build with Maven
         run: mvn -B package
 
