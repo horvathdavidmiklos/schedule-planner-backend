@@ -48,7 +48,7 @@ jobs:
           curl -X MKCOL -u ${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASSWORD }} "$WEBDAV_URL"
 
           # Find and upload JAR files
-          for jar in $(find . -name "authentication-${VERSION}.jar"); do
+          for jar in $(find . -name "authentication-${VERSION}-SNAPSHOT.jar"); do
             echo "Uploading $jar to $WEBDAV_URL"
             curl -T "$jar" -u ${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASSWORD }} "$WEBDAV_URL$(basename $jar)"
           done
