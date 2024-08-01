@@ -33,9 +33,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-      - name: Get project version
-        id: get_version
-        run: echo "::set-output name=VERSION::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)"
+      - name: Read version from file
+        id: read_version
+        run: echo "::set-output name=VERSION::$(cat VERSION)"
 
       - name: Set project version in pom.xml
         run: mvn versions:set -DnewVersion=${{ steps.read_version.outputs.VERSION }}
