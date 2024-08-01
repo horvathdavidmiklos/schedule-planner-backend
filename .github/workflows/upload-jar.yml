@@ -3,6 +3,11 @@ name: Maven Package
 on:
   push:
     branches: [master]
+  pull_request:
+    branches: [master]
+  release:
+    types: [created]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,9 +31,7 @@ jobs:
 
       - name: Get project version
         id: get_version
-        run: |
-          VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+        run: echo "::set-output name=VERSION::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)"
 
       - name: Upload JAR to WebDAV
         run: |
@@ -38,7 +41,3 @@ jobs:
         env:
           WEBDAV_USER: ${{ secrets.WEBDAV_USER }}
           WEBDAV_PASSWORD: ${{ secrets.WEBDAV_PASSWORD }}
-
-
-
-
