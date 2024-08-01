@@ -31,3 +31,7 @@ jobs:
         run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload JAR to WebDAV
+        run: |
+          curl -T target/my-app.jar -u ${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASSWORD }} https://repo.horvathdavidmiklos.hu/my-app.jar
