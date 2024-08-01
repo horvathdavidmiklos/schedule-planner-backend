@@ -32,6 +32,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get project version
+        id: get_version
+        run: echo "::set-output name=VERSION::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)"
+
       - name: Upload JAR to WebDAV
         run: |
-          curl -T authentication/target/authentication-0.0.1-SNAPSHOT.jar -u ${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASSWORD }} https://repo.horvathdavidmiklos.hu/authentication-0.0.1-SNAPSHOT.jar
+          VERSION=${{ steps.get_version.outputs.VERSION }}
+          curl -X MKCOL -u ${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASSWORD }} https://repo.horvathdavidmiklos.hu/${VERSION}/
+          curl -T authentication/target/authentication-${VERSION}.jar -u ${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASSWORD }} https://repo.horvathdavidmiklos.hu/${VERSION}/authentication.jar
+        env:
+          WEBDAV_USER: ${{ secrets.WEBDAV_USER }}
+          WEBDAV_PASSWORD: ${{ secrets.WEBDAV_PASSWORD }}
