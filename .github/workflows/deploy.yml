@@ -1,0 +1,50 @@
+name: Deploy to Docker Hub
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to set'
+        required: true
+        default: 'latest'
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'master'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'adopt-openjdk'
+
+      - name: Update version in pom.xml
+        run: |
+          mvn versions:set -DnewVersion=${{ github.event.inputs.version }}
+          mvn versions:commit
+        env:
+          MAVEN_OPTS: '-Xmx1024m'
+
+      - name: Build and push Docker image
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Build Docker image
+        run: mvn compile jib:dockerBuild -pl authentication
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker tag horvathdavidmiklos/schedule-planner-backend:${{ github.event.inputs.version }} horvathdavidmiklos/schedule-planner-backend
+          docker push horvathdavidmiklos/schedule-planner-backend:${{ github.event.inputs.version }}

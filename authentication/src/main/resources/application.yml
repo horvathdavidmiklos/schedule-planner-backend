@@ -1,8 +1,10 @@
 spring:
   datasource:
-    url: "jdbc:mysql://horvathdavidmiklos.hu:3306/schedule_planner"
-    username: "root"
-    password: "Schedule_planner2024"
-    driver-class-name: "com.mysql.cj.jdbc.Driver"
+    url: ${DATABASE_URL:${database.url}}
+    username: ${DATABASE_USERNAME:${database.username}}
+    password: ${DATABASE_PASSWORD:${database.password}}
+    driver-class-name: ${DATABASE_DRIVER_CLASS_NAME:${database.driver-class-name}}
   flyway:
-    enabled: false
+    enabled: ${FLYWAY_ENABLED:${flyway.enabled}}
+
+
