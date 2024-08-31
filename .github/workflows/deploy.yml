@@ -27,11 +27,15 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Build with Maven
-        run: mvn clean package -DskipTests
+      - name: Build Maven project
+        run: mvn clean compile -pl authentication
 
-      - name: Build Maven project and Docker image
-        run: mvn clean package -pl authentication -am jib:build -Djib.to.image=${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:${{ env.VERSION }}
+      - name: Build Docker image with Jib
+        run: mvn jib:dockerBuild -pl authentication
+
+      - name: Tag Docker image
+        run: |
+          docker tag ${DOCKERHUB_USERNAME}/schedule-planner-authentication:latest ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:${{ env.VERSION }}
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -40,5 +44,5 @@ jobs:
           password: ${{ env.DOCKERHUB_PASSWORD }}
 
       - name: Push Docker image to Docker Hub
-        run: docker push ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:${{ env.VERSION }}
-
+        run: |
+          docker push ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:${VERSION}
