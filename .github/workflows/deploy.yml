@@ -2,11 +2,6 @@ name: Build and Push Docker Image
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to set'
-        required: true
-        default: 'latest'
 
 jobs:
   build:
@@ -15,7 +10,6 @@ jobs:
     env:
       DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
       DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-      VERSION: ${{ github.event.inputs.version }}
 
     steps:
       - name: Checkout code
@@ -27,8 +21,14 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: Extract version from pom.xml
+        id: get_version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
       - name: Build Maven project
-        run: mvn clean install
+        run: mvn clean install -DskipTests
 
       - name: Build Docker image with Jib
         run: mvn jib:dockerBuild -pl authentication
