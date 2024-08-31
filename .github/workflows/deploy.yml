@@ -30,8 +30,8 @@ jobs:
       - name: Build with Maven
         run: mvn clean package -DskipTests
 
-      - name: Build Docker image
-        run: docker build -t ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-backend:${{ env.VERSION }} .
+      - name: Build Maven project and Docker image
+        run: mvn clean package -pl authentication -am jib:build -Djib.to.image=${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:${{ env.VERSION }}
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -40,5 +40,5 @@ jobs:
           password: ${{ env.DOCKERHUB_PASSWORD }}
 
       - name: Push Docker image to Docker Hub
-        run: docker push ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-backend:${{ env.VERSION }}
+        run: docker push ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:${{ env.VERSION }}
 
