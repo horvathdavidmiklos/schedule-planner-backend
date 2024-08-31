@@ -28,7 +28,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build Maven project
-        run: mvn clean compile -pl authentication
+        run: mvn clean install
 
       - name: Build Docker image with Jib
         run: mvn jib:dockerBuild -pl authentication
