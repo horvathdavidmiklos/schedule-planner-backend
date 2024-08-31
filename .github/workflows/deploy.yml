@@ -31,7 +31,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Push Docker image to Docker Hub
         run: docker push ${{ vars.DOCKERHUB_USERNAME }}/schedule-planner-backend:latest
