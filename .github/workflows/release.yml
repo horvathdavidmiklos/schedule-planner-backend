@@ -20,6 +20,13 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+          git config --global credential.helper store
+
+      - name: Authenticate with GitHub Token
+        env:
+          GITHUB_TOKEN: ${{ secrets.TECH_USER_TOKEN }}
+        run: |
+          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
       - name: Merge master into release
         run: |
