@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'VERSION'
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Merge master into release branch
+        run: |
+          version=${{ github.event.inputs.version }}
+          git fetch
+          git checkout -b release/$version || git checkout release/$version
+          git merge origin/master
+
+      - name: Update Maven version
+        run: |
+          mvn versions:set -DnewVersion=${{ github.event.inputs.version }}
+          git add pom.xml
+          git commit -m "Set version to ${{ github.event.inputs.version }}"
+
+      - name: Push changes to release branch
+        run: |
+          git push origin release/${{ github.event.inputs.version }}
+
+      - name: Merge release branch into master
+        run: |
+          git checkout master
+          git merge release/${{ github.event.inputs.version }}
+          git push origin master
+
+      - name: Create a new tag
+        run: |
+          git tag -a v${{ github.event.inputs.version }} -m "Release version ${{ github.event.inputs.version }}"
+          git push origin v${{ github.event.inputs.version }}
