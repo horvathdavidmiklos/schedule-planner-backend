@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -23,8 +23,6 @@ jobs:
           git config --global credential.helper store
 
       - name: Authenticate with GitHub Token
-        env:
-          GITHUB_TOKEN: ${{ secrets.TECH_USER_TOKEN }}
         run: |
           git remote set-url origin https://${{ secrets.TECH_USER_TOKEN }}@github.com/${{ github.repository }}.git
 
@@ -36,8 +34,8 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'  # See https://github.com/actions/setup-java for options
-          java-version: '21'       # Specify the Java version you need
+          distribution: 'temurin'
+          java-version: '21'
 
       - name: Update version
         run: |
