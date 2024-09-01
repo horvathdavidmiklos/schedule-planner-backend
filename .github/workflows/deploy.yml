@@ -1,56 +1,46 @@
-name: Release
+name: Build and Push Docker Image
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'VERSION'
-        required: true
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
 
+    env:
+      DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+      DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+
     steps:
-      - name: Check out the repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Java 21
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
           java-version: '21'
+          distribution: 'temurin'
 
-      - name: Set Git user
+      - name: Extract version from pom.xml
+        id: get_version
         run: |
-          git config user.email "horvathdavid.miklos@gmail.com"
-          git config user.name "horvathdavidmiklos"
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      - name: Build Maven project
+        run: mvn clean install -DskipTests
 
+      - name: Build Docker image with Jib
+        run: mvn jib:dockerBuild -pl authentication
 
-      - name: Merge master into release branch
+      - name: Tag Docker image
         run: |
-          version=${{ github.event.inputs.version }}
-          git fetch
-          git checkout -b release/$version || git checkout release/$version
-          git merge origin/master
+          docker tag ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:latest ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:${{ env.VERSION }}
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ env.DOCKERHUB_PASSWORD }}
 
-      - name: Update Maven version
+      - name: Push Docker image to Docker Hub
         run: |
-          mvn versions:set -DnewVersion=${{ github.event.inputs.version }}
-          git add pom.xml
-          git commit -m "Set version to ${{ github.event.inputs.version }}"
-
-      - name: Push changes to release branch
-        run: |
-          git push origin release/${{ github.event.inputs.version }}
-
-      - name: Merge release branch into master
-        run: |
-          git checkout master
-          git merge release/${{ github.event.inputs.version }}
-          git push origin master
-
-      - name: Create a new tag
-        run: |
-          git tag -a v${{ github.event.inputs.version }} -m "Release version ${{ github.event.inputs.version }}"
-          git push origin v${{ github.event.inputs.version }}
+          docker push ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:${VERSION}
