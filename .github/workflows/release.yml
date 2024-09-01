@@ -39,9 +39,9 @@ jobs:
       - name: Merge master into release branch
         run: |
           version=${{ github.event.inputs.version }}
-          git fetch
+          git fetch origin master
           git checkout release
-          git merge origin/master
+          git merge origin/master --allow-unrelated-histories
 
       - name: Update Maven version
         run: |
