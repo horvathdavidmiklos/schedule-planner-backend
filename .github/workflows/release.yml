@@ -21,6 +21,12 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Set Git user
+        run: |
+          git config user.email "horvathdavid.miklos@gmail.com"
+          git config user.name "horvathdavidmiklos"
+
+
       - name: Merge master into release branch
         run: |
           version=${{ github.event.inputs.version }}
