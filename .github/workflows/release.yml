@@ -1,10 +1,9 @@
-name: Release
-
+name: Release Workflow
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'VERSION'
+        description: 'New version number'
         required: true
 
 jobs:
@@ -12,54 +11,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
         with:
-          token: ${{ secrets.TECH_USER_TOKEN }}
+          fetch-depth: 0
 
-      - name: Set up Java 21
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Merge master into release
+        run: |
+          git checkout release
+          git merge origin/master
+
+      - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '21'
+          distribution: 'temurin'  # See https://github.com/actions/setup-java for options
+          java-version: '21'       # Specify the Java version you need
 
-      - name: Configure Git for GitHub Actions
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-
-      - name: Fetch all branches
-        run: git fetch --all
-
-      - name: Check out the release branch
-        run: |
-          version=${{ github.event.inputs.version }}
-          git checkout -b release origin/release || git checkout release
-
-      - name: Merge master into release branch
-        run: |
-          version=${{ github.event.inputs.version }}
-          git fetch origin master
-          git checkout release
-          git merge origin/master --allow-unrelated-histories
-
-      - name: Update Maven version
+      - name: Update version
         run: |
           mvn versions:set -DnewVersion=${{ github.event.inputs.version }}
-          git add pom.xml
-          git commit -m "Set version to ${{ github.event.inputs.version }}"
+          mvn versions:commit
+
+      - name: Commit version
+        run: |
+          git add .
+          git commit -m "Bump version to ${{ github.event.inputs.version }}"
 
       - name: Push changes to release branch
         run: |
-          git push https://x-access-token:${{ secrets.TECH_USER_TOKEN }}@github.com/${{ github.repository }} release/${{ github.event.inputs.version }}
+          git push origin release
 
-      - name: Merge release branch into master
+      - name: Merge release into master
         run: |
           git checkout master
-          git merge release/${{ github.event.inputs.version }}
-          git push https://x-access-token:${{ secrets.TECH_USER_TOKEN }}@github.com/${{ github.repository }} master
+          git merge release
 
-      - name: Create a new tag
+      - name: Push changes to master branch
         run: |
-          git tag -a v${{ github.event.inputs.version }} -m "Release version ${{ github.event.inputs.version }}"
-          git push https://x-access-token:${{ secrets.TECH_USER_TOKEN }}@github.com/${{ github.repository }} v${{ github.event.inputs.version }}
+          git push origin master
