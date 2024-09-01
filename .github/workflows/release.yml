@@ -40,7 +40,7 @@ jobs:
         run: |
           version=${{ github.event.inputs.version }}
           git fetch
-          git checkout -b release || git checkout release
+          git checkout release
           git merge origin/master
 
       - name: Update Maven version
