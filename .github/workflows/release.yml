@@ -23,7 +23,7 @@ jobs:
 
       - name: Configure GitHub token for commit
         run: |
-          git config --global user.email "orvathdavid.miklos@gmail.com"
+          git config --global user.email "horvathdavid.miklos@gmail.com"
           git config --global user.name "horvathdavidmiklos"
           git remote set-url origin https://x-access-token:${{ secrets.TECH_USER_TOKEN }}@github.com/${{ github.repository }}
 
