@@ -34,13 +34,13 @@ jobs:
       - name: Check out the release branch
         run: |
           version=${{ github.event.inputs.version }}
-          git checkout -b release/$version origin/release || git checkout release/$version
+          git checkout -b release origin/release || git checkout release
 
       - name: Merge master into release branch
         run: |
           version=${{ github.event.inputs.version }}
           git fetch
-          git checkout -b release/$version || git checkout release/$version
+          git checkout -b release || git checkout release
           git merge origin/master
 
       - name: Update Maven version
