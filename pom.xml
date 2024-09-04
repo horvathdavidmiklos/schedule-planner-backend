@@ -37,6 +37,7 @@
     </modules>
     <properties>
         <!-- VERSION LAST UPDATED: 2024.07.24 -->
+        <build.number>001</build.number>
         <application.version>0.0.1-${buildNumber}-SNAPSHOT</application.version>
         <java.version>21</java.version>
         <spring.boot.version>3.3.2</spring.boot.version>
