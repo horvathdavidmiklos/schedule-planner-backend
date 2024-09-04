@@ -38,7 +38,7 @@
     <properties>
         <!-- VERSION LAST UPDATED: 2024.07.24 -->
         <build.number>001</build.number>
-        <application.version>0.0.1-${buildNumber}-SNAPSHOT</application.version>
+        <application.version>0.0.1-${build.number}-SNAPSHOT</application.version>
         <java.version>21</java.version>
         <spring.boot.version>3.3.2</spring.boot.version>
         <mysql.connector.java.version>8.0.33</mysql.connector.java.version>
@@ -52,6 +52,7 @@
         <spring.security.version>6.3.1</spring.security.version>
         <javax.annotation.api.version>1.3.2</javax.annotation.api.version>
         <jib.maven.plugin.version>3.4.3</jib.maven.plugin.version>
+        <buildnumber.mavenplugin>1.4</buildnumber.mavenplugin>
     </properties>
     <dependencies>
         <dependency>
@@ -157,11 +158,11 @@
                     </container>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>1.4</version>
+                <version>${buildnumber.mavenplugin}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -170,31 +171,9 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!-- Beállíthatod az SCM információkat, ha szükséges -->
-                    <doCheck>false</doCheck>
-                    <doUpdate>false</doUpdate>
-                    <format>{0,number,000}</format>
+                    <doCheck>true</doCheck>
+                    <doUpdate>true</doUpdate>
                 </configuration>
-            </plugin>
-
-            <!-- Maven Resources Plugin to replace placeholders in files -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>resources</goal>
-                        </goals>
-                        <configuration>
-                            <filters>
-                                <filter>target/classes/application.properties</filter>
-                            </filters>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
