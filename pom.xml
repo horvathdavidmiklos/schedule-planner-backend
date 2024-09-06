@@ -31,7 +31,6 @@
     <name>scheduleplanner</name>
     <description>Schedule-planner</description>
     <modules>
-        <module>common</module>
         <module>authentication</module>
         <module>planning-core</module>
     </modules>
