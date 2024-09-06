@@ -26,13 +26,14 @@
 
     <groupId>com</groupId>
     <artifactId>scheduleplanner</artifactId>
-    <version>0.0.1-${buildNumber}</version>
+    <version>0.0.1</version>
     <packaging>pom</packaging>
     <name>scheduleplanner</name>
     <description>Schedule-planner</description>
     <modules>
         <module>authentication</module>
         <module>planning-core</module>
+        <module>common</module>
     </modules>
     <properties>
         <application.version>0.0.1-${buildNumber}</application.version>
