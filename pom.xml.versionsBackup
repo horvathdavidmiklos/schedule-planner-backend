@@ -53,7 +53,7 @@
         <buildnumber.maven.plugin>3.2.1</buildnumber.maven.plugin>
         <maven.resources.plugin.version>3.2.0</maven.resources.plugin.version>
 
-        <buildNumber>1</buildNumber>
+        <buildNumber>0</buildNumber>
     </properties>
     <dependencies>
         <dependency>
