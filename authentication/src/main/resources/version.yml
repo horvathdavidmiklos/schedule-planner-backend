@@ -1,2 +1,0 @@
-version: @application.version@
-buildNumber: @build.number@
