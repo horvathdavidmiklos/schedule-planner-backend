@@ -16,6 +16,8 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>
             UTF-8</project.build.sourceEncoding>
+            <application.version>1.0.0</application.version>
+            <build.number>${buildNumber}</build.number>
     </properties>
 
     <dependencies>
@@ -91,6 +93,22 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <doCheck>true</doCheck>
+                    <doUpdate>true</doUpdate>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.2.0</version>
@@ -102,8 +120,14 @@
                         </goals>
                         <configuration>
                             <filters>
-                                <filter>src/main/resources/version.yaml</filter>
+                                <filter>src/main/resources/version.yml</filter>
                             </filters>
+                            <nonFilteredFileExtensions>
+                                <nonFilteredFileExtension>properties</nonFilteredFileExtension>
+                            </nonFilteredFileExtensions>
+                            <delimiters>
+                                <delimiter>@</delimiter>
+                            </delimiters>
                         </configuration>
                     </execution>
                 </executions>
