@@ -29,7 +29,6 @@ public class CreateAccountBusinessLogic {
         this.encrypt = encrypt;
     }
 
-    @LogMethod
     public void runService(@SensitiveData AccountInDto dto) {
         checkNonNull(dto);
         checkRegex(dto);

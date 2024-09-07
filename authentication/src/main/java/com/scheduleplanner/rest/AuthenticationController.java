@@ -1,16 +1,23 @@
 package com.scheduleplanner.rest;
 
+import com.scheduleplanner.common.exception.baseexception.handled.HandledException;
+import com.scheduleplanner.common.exception.handler.BaseController;
+import com.scheduleplanner.common.log.LogMethod;
+import com.scheduleplanner.common.log.SensitiveData;
 import com.scheduleplanner.core.createaccount.CreateAccountBusinessLogic;
 import com.scheduleplanner.core.createaccount.dto.AccountInDto;
 import com.scheduleplanner.core.login.LoginBusinessLogic;
 import com.scheduleplanner.core.login.dto.TokenOutDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.function.Supplier;
+
 @RestController
 @RequestMapping("/schedule-planner/account")
-public class AuthenticationController {
+public class AuthenticationController extends BaseController {
     private final CreateAccountBusinessLogic createAccount;
     private final LoginBusinessLogic loginBusinessLogic;
 
@@ -20,15 +27,16 @@ public class AuthenticationController {
         this.loginBusinessLogic = loginBusinessLogic;
     }
 
+    @LogMethod
     @PostMapping("/create")
-    public ResponseEntity<String> createAccount(@RequestBody AccountInDto accountDto) {
-        createAccount.runService(accountDto);
-        return ResponseEntity.ok().body("Account created successfully");
+    public ResponseEntity<String> createAccount(@RequestBody @SensitiveData AccountInDto accountDto) {
+        return handledException(()->createAccount.runService(accountDto),"Account created successfully");
     }
 
+    @LogMethod
     @GetMapping("/login")
-    public ResponseEntity<TokenOutDto> loginAccount(@RequestBody com.scheduleplanner.core.login.dto.AccountInDto accountDto) {
-        var token = loginBusinessLogic.runService(accountDto);
-        return ResponseEntity.ok().body(token);
+    public ResponseEntity<?> loginAccount(@RequestBody @SensitiveData com.scheduleplanner.core.login.dto.AccountInDto accountDto) {
+        return handledException(()->loginBusinessLogic.runService(accountDto));
     }
+
 }

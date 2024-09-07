@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Aspect
 @Component
@@ -45,10 +47,10 @@ public class LoggingAspect {
 
         try {
             Object result = joinPoint.proceed(args);
-            logger.info("Exiting method: " + method.getName());
+            logger.info("Exiting method: " + method.getName()+" with return value: " + result);
             return result;
         } catch (Throwable throwable) {
-            logger.error("Exception in method: " + method.getName() + " with message: " + throwable.getMessage(), throwable);
+            logger.error("Exception in method: "+method.getName() + " with message: " + throwable.getMessage(), throwable);
             throw throwable;
         }
     }

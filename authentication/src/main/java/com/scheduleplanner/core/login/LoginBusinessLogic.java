@@ -24,7 +24,6 @@ public class LoginBusinessLogic {
         this.tokenService = tokenService;
     }
 
-    @LogMethod
     public TokenOutDto runService(@SensitiveData AccountInDto dto) {
         var account = findAccount(dto);
         checkAccountExists(account);
