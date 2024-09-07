@@ -26,6 +26,26 @@ jobs:
         run: |
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+      - name: Extract and increment build number
+        id: increment_build_number
+        run: |
+          BUILD_NUMBER=$(mvn help:evaluate -Dexpression=buildNumber -q -DforceStdout)
+          NEXT_BUILD_NUMBER=$((BUILD_NUMBER + 1))
+          mvn buildnumber:create -DbuildNumber=${NEXT_BUILD_NUMBER}
+          echo "BUILD_NUMBER=${NEXT_BUILD_NUMBER}" >> $GITHUB_ENV
+
+      - name: Update pom.xml with new version
+        run: |
+          mvn versions:set -DnewVersion=${{ env.VERSION }}-${{ env.BUILD_NUMBER }} versions:commit
+
+      - name: Commit updated pom.xml
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: 'github-actions'
+          author_email: 'github-actions@github.com'
+          message: 'Update version to ${VERSION}-${BUILD_NUMBER}'
+
       - name: Build Maven project
         run: mvn clean install -DskipTests
 
