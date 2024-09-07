@@ -1,4 +1,8 @@
 spring:
+  config:
+    location: ${SPRING_CONFIG_LOCATION}
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE}:properties
   datasource:
     url: ${DATABASE_URL:${database.url}}
     username: ${DATABASE_USERNAME:${database.username}}
@@ -7,4 +11,11 @@ spring:
   flyway:
     enabled: ${FLYWAY_ENABLED:${flyway.enabled}}
 
-
+server:
+  port: ${server-settings.port}
+  ssl:
+    enabled: ${server-settings.ssl.enabled}
+    key-store: ${server-settings.ssl.key-store}
+    key-store-password: ${server-settings.ssl.key-store-password}
+    key-store-type: ${server-settings.ssl.key-store-type}
+    key-alias: ${server-settings.ssl.key-alias}

@@ -79,7 +79,7 @@
                             <port>8080</port>
                         </ports>
                         <environment>
-                            <SPRING_PROFILES_ACTIVE>localhost</SPRING_PROFILES_ACTIVE>
+                            <SPRING_PROFILES_ACTIVE>properties</SPRING_PROFILES_ACTIVE>
                         </environment>
                     </container>
                     <extraDirectories>

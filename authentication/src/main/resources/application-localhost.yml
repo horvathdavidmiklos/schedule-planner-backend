@@ -1,7 +1,0 @@
-database:
-    url: "jdbc:mysql://horvathdavidmiklos.hu:3306/schedule_planner"
-    username: "root"
-    password: "Schedule_planner2024"
-    driver-class-name: "com.mysql.cj.jdbc.Driver"
-flyway:
-  enabled: false
