@@ -123,9 +123,6 @@
                             <filters>
                                 <filter>src/main/resources/version.properties</filter>
                             </filters>
-                            <nonFilteredFileExtensions>
-                                <nonFilteredFileExtension>properties</nonFilteredFileExtension>
-                            </nonFilteredFileExtensions>
                             <delimiters>
                                 <delimiter>@</delimiter>
                             </delimiters>
