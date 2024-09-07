@@ -35,17 +35,6 @@ jobs:
           mvn buildnumber:create -DbuildNumber=${NEXT_BUILD_NUMBER}
           echo "BUILD_NUMBER=${NEXT_BUILD_NUMBER}" >> $GITHUB_ENV
 
-      - name: Update pom.xml with new version
-        run: |
-          mvn versions:set -DnewVersion=${{ env.VERSION }}-${{ env.BUILD_NUMBER }-SNAPSHOT} versions:commit
-
-      - name: Commit updated pom.xml
-        uses: EndBug/add-and-commit@v9
-        with:
-          author_name: 'github-actions'
-          author_email: 'github-actions@github.com'
-          message: 'Update version to ${VERSION}-${BUILD_NUMBER}-SNAPSHOT'
-
       - name: Build Maven project
         run: mvn clean install -DskipTests
 
@@ -63,4 +52,4 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker push ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:${VERSION}
+          docker push ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:${{ env.VERSION }}-${{ env.BUILD_NUMBER }-SNAPSHOT}
