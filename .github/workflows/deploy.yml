@@ -32,8 +32,15 @@ jobs:
         run: |
           BUILD_NUMBER=$(mvn help:evaluate -Dexpression=buildNumber -q -DforceStdout)
           NEXT_BUILD_NUMBER=$((BUILD_NUMBER + 1))
-          mvn buildnumber:create -DbuildNumber=${NEXT_BUILD_NUMBER}
+          mvn versions:set-property -Dproperty=buildNumber -DnewVersion=${NEXT_BUILD_NUMBER}
           echo "BUILD_NUMBER=${NEXT_BUILD_NUMBER}" >> $GITHUB_ENV
+
+      - name: Commit updated pom.xml
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: 'github-actions'
+          author_email: 'github-actions@github.com'
+          message: 'Update version to ${VERSION}-${BUILD_NUMBER}'
 
       - name: Build Maven project
         run: mvn clean install -DskipTests
@@ -43,7 +50,7 @@ jobs:
 
       - name: Tag Docker image
         run: |
-          docker tag ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:latest ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:${{ env.VERSION }}
+          docker tag ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:latest ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:${{ env.VERSION }}-${{env.BUILD_NUMBER}}
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -52,4 +59,4 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker push ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:${{ env.VERSION }}-${{ env.BUILD_NUMBER }-SNAPSHOT}
+          docker push ${{ env.DOCKERHUB_USERNAME }}/schedule-planner-authentication:${{env.VERSION}}-${{env.BUILD_NUMBER}}
