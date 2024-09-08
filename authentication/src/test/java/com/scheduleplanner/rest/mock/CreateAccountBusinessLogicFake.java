@@ -10,7 +10,7 @@ public class CreateAccountBusinessLogicFake extends CreateAccountBusinessLogic {
     }
     public CallChecker<RunMethod> callChecker;
     public CreateAccountBusinessLogicFake() {
-        super(null,null);
+        super(null,null,null);
         callChecker = new CallChecker<>();
     }
 

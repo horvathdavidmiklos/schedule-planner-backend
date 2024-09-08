@@ -34,7 +34,7 @@ class CreateAccountBusinessLogicTest {
     @BeforeEach void setUp() {
         accountHandlerFake = new AccountHandlerFake();
         encryptFake = new EncryptFake();
-        createAccountBusinessLogic = new CreateAccountBusinessLogic(accountHandlerFake, encryptFake);
+        createAccountBusinessLogic = new CreateAccountBusinessLogic(accountHandlerFake, encryptFake,null);
     }
 
     @Test void positive() {

@@ -27,7 +27,6 @@ public class AuthenticationController extends BaseController {
         this.loginBusinessLogic = loginBusinessLogic;
     }
 
-    @LogMethod
     @PostMapping("/create")
     public ResponseEntity<String> createAccount(@RequestBody @SensitiveData AccountInDto accountDto) {
         return handledException(()->createAccount.runService(accountDto),"Account created successfully");

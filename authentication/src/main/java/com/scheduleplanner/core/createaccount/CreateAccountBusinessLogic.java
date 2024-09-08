@@ -1,6 +1,9 @@
 package com.scheduleplanner.core.createaccount;
 
 
+import com.scheduleplanner.common.email.EmailProperties;
+import com.scheduleplanner.common.email.EmailSender;
+import com.scheduleplanner.common.entity.EmailEntity;
 import com.scheduleplanner.core.createaccount.dto.AccountInDto;
 import com.scheduleplanner.gateway.store.AccountHandler;
 import com.scheduleplanner.secret.Encrypt;
@@ -9,7 +12,6 @@ import com.scheduleplanner.common.exception.baseexception.handled.EmptyFieldExce
 import com.scheduleplanner.common.exception.baseexception.handled.NotSupportedFormatException;
 import com.scheduleplanner.common.exception.baseexception.handled.PasswordNotMatchingException;
 import com.scheduleplanner.common.exception.baseexception.handled.ValueNotUniqueException;
-import com.scheduleplanner.common.log.LogMethod;
 import com.scheduleplanner.common.log.SensitiveData;
 
 import java.util.regex.Pattern;
@@ -23,10 +25,12 @@ public class CreateAccountBusinessLogic {
 
     private final AccountHandler accountHandler;
     private final Encrypt encrypt;
+    private final EmailProperties emailProperties;
 
-    public CreateAccountBusinessLogic(AccountHandler accountHandler, Encrypt encrypt) {
+    public CreateAccountBusinessLogic(AccountHandler accountHandler, Encrypt encrypt, EmailProperties emailProperties) {
         this.accountHandler = accountHandler;
         this.encrypt = encrypt;
+        this.emailProperties = emailProperties;
     }
 
     public void runService(@SensitiveData AccountInDto dto) {
@@ -40,6 +44,8 @@ public class CreateAccountBusinessLogic {
                 .username(dto.username().toUpperCase())
                 .createdAt(LocalDateTime.now());
         accountHandler.save(account);
+        var email = new EmailSender(new EmailEntity().subject("TÁRGY").to("horvathdavid.miklos@gmail.com").body("TESZT"),emailProperties);
+        email.send();
     }
 
     private void checkNonNull(AccountInDto dto) {

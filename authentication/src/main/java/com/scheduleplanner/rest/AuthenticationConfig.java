@@ -1,5 +1,6 @@
 package com.scheduleplanner.rest;
 
+import com.scheduleplanner.common.email.EmailProperties;
 import com.scheduleplanner.core.createaccount.CreateAccountBusinessLogic;
 import com.scheduleplanner.gateway.store.AccountHandler;
 import com.scheduleplanner.gateway.store.AccountHandlerImpl;
@@ -17,8 +18,8 @@ import javax.sql.DataSource;
 public class AuthenticationConfig {
 
     @Bean
-    public CreateAccountBusinessLogic createAccountBusinessLogic(AccountHandler accountHandler, Encrypt encrypt) {
-        return new CreateAccountBusinessLogic(accountHandler,encrypt);
+    public CreateAccountBusinessLogic createAccountBusinessLogic(AccountHandler accountHandler, Encrypt encrypt, EmailProperties emailProperties) {
+        return new CreateAccountBusinessLogic(accountHandler,encrypt, emailProperties);
     }
 
     @Bean
@@ -40,5 +41,4 @@ public class AuthenticationConfig {
     public TokenService tokenService(){
         return new TokenServiceImpl();
     }
-
 }
