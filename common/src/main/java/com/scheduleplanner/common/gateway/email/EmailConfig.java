@@ -1,4 +1,4 @@
-package com.scheduleplanner.common.email;
+package com.scheduleplanner.common.gateway.email;
 
 import lombok.Getter;
 import lombok.Setter;

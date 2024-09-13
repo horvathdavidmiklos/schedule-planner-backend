@@ -1,4 +1,4 @@
-package com.scheduleplanner.secret;
+package com.scheduleplanner.encrypt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -21,9 +21,9 @@ server:
     key-alias: ${server-settings.ssl.key-alias}
 email:
   host: ${email.host}
-  adress: ${email.adress}
+  address: ${email.address}
   password: ${email.password}
 
-domain-name: ${domain.name}
-
-application-name: ${application.name}
+application:
+  name: ${application.name}
+  host: ${application.host}

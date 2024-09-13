@@ -1,6 +1,6 @@
 package com.scheduleplanner.core.mock;
 
-import com.scheduleplanner.secret.Encrypt;
+import com.scheduleplanner.encrypt.Encrypt;
 import mockhelper.CallChecker;
 
 public class EncryptFake implements Encrypt {

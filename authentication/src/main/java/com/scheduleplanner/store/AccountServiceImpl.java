@@ -1,21 +1,16 @@
-package com.scheduleplanner.gateway.store.service;
+package com.scheduleplanner.store;
 
-import com.scheduleplanner.gateway.store.entity.Account;
-import com.scheduleplanner.gateway.store.entity.UnverifiedAccount;
-import com.scheduleplanner.gateway.store.repository.AccountRepository;
-import com.scheduleplanner.gateway.store.repository.UnverifiedAccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.scheduleplanner.common.exception.baseexception.unhandled.UnknownException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-public class AccountService {
+public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
 
-    public AccountService(AccountRepository accountRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 
@@ -28,6 +23,12 @@ public class AccountService {
     }
 
     public void save(Account account){
+        accountRepository.save(account);
+    }
+
+    public void verifyAccount(String username){
+        var account = findByUsername(username).orElseThrow(()-> new UnknownException("ACCOUNT_NOT_FOUND"));
+        account.isVerified(true);
         accountRepository.save(account);
     }
 

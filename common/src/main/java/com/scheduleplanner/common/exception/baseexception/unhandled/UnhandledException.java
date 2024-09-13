@@ -10,4 +10,10 @@ public abstract class UnhandledException extends RuntimeException{
         highlightedMessage = message;
         this.httpStatus = httpStatus;
     }
+
+    public UnhandledException(String message,HttpStatus httpStatus) {
+        super(message);
+        highlightedMessage = message;
+        this.httpStatus = httpStatus;
+    }
 }

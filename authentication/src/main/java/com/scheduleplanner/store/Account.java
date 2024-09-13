@@ -1,4 +1,4 @@
-package com.scheduleplanner.gateway.store.entity;
+package com.scheduleplanner.store;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,21 +12,25 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "unverified")
-@Setter
+@Table(name = "account")
 @Getter
-public class UnverifiedAccount {
+@Setter
+@Accessors(chain = true, fluent = true)
+public class Account {
+
     @Id
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "username",unique = true)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password_hash")
+    @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
-    private String token;
+
+    @Column(name = "is_verified", nullable = false)
+    private boolean isVerified;
 }

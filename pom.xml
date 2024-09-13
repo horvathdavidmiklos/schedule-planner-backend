@@ -129,7 +129,7 @@
                     <excludedClasses>
                         <param>com.scheduleplanner.AuthenticationApplication</param>
                         <param>com.scheduleplanner.common.log.*</param>
-                        <param>com.scheduleplanner.*Config</param>
+                        <param>com.scheduleplanner.*Configuration</param>
                     </excludedClasses>
                     <targetTests>
                         <param>com.scheduleplanner.*</param>

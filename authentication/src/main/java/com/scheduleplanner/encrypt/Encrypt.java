@@ -1,6 +1,4 @@
-package com.scheduleplanner.secret;
-
-import org.springframework.security.crypto.bcrypt.BCrypt;
+package com.scheduleplanner.encrypt;
 
 public interface Encrypt {
     String hashPassword(String password);
