@@ -19,9 +19,14 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
+            <version>${jakarta.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.sun.mail</groupId>
-            <artifactId>javax.mail</artifactId>
-            <version>1.6.2</version>
+            <artifactId>jakarta.mail</artifactId>
+            <version>${jakarta.version}</version>
         </dependency>
 
     </dependencies>

@@ -15,7 +15,7 @@ public class CreateAccountBusinessLogicFake extends CreateAccountBusinessLogic {
     }
 
     @Override
-    public void runService(AccountInDto dto) {
-        callChecker.addCall(RunMethod.RUN_SERVICE,dto);
+    public void runService(AccountInDto accountDto) {
+        callChecker.addCall(RunMethod.RUN_SERVICE, accountDto);
     }
 }

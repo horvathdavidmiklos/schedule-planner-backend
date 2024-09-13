@@ -27,6 +27,7 @@ public class AuthenticationController extends BaseController {
         this.loginBusinessLogic = loginBusinessLogic;
     }
 
+    @LogMethod
     @PostMapping("/create")
     public ResponseEntity<String> createAccount(@RequestBody @SensitiveData AccountInDto accountDto) {
         return handledException(()->createAccount.runService(accountDto),"Account created successfully");
@@ -36,6 +37,12 @@ public class AuthenticationController extends BaseController {
     @GetMapping("/login")
     public ResponseEntity<?> loginAccount(@RequestBody @SensitiveData com.scheduleplanner.core.login.dto.AccountInDto accountDto) {
         return handledException(()->loginBusinessLogic.runService(accountDto));
+    }
+
+    @GetMapping("/verify-email")
+    public ResponseEntity<String> verifyEmail(@RequestParam("token") String token) {
+        handledException(()->createAccount.runService(token),"Account created successfully")
+        return ResponseEntity.ok("Email verification successful");
     }
 
 }

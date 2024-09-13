@@ -1,8 +1,6 @@
 package com.scheduleplanner.gateway.store;
 
 import com.scheduleplanner.common.repository.BaseConnection;
-import com.scheduleplanner.common.entity.Account;
-import com.scheduleplanner.common.entity.NewAccount;
 import com.scheduleplanner.common.exception.baseexception.handled.ValueNotUniqueException;
 import com.scheduleplanner.common.exception.baseexception.unhandled.UnknownSqlException;
 import org.springframework.stereotype.Component;
@@ -14,31 +12,41 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class AccountHandlerImpl extends BaseConnection  implements AccountHandler{
+public class AccountRepositoryImpl extends BaseConnection  implements AccountRepository {
     private final static String SAVE_ACCOUNT_SQL =
-            "INSERT INTO account (email, username, password_hash, created_at) VALUES (?, ?, ?, ?)";
+            "INSERT INTO unverified (email, username, password_hash, created_at, token) VALUES (?, ?, ?, ?, ?)";
     private final static String IS_UNIQUE_EMAIL_SQL =
-            "SELECT COUNT(*) FROM account WHERE email = ?";
+            "SELECT COUNT(*) FROM (SELECT email FROM unverified WHERE email = ? UNION SELECT email FROM account WHERE email = ?)";
     private final static String IS_UNIQUE_USERNAME_SQL =
-            "SELECT COUNT(*) FROM account WHERE username = ?";
+            "SELECT COUNT(*) FROM (SELECT username FROM unverified WHERE username = ? UNION SELECT username FROM account WHERE email = ?)";
     private final static String FIND_ACCOUNT_BY_EMAIL_SQL =
-            "SELECT email,username,password_hash FROM account WHERE email =?";
+            "SELECT email,username,password_hash FROM unverified WHERE email =?";
     private final static String FIND_ACCOUNT_BY_USERNAME_SQL =
-            "SELECT username,password_hash FROM account WHERE username =?";
+            "SELECT username,password_hash FROM unverified WHERE username =?";
+    private final static String SAVE_VERIFIED_ACCOUNT_SQL = "INSERT INTO account (email, username, password_hash, created_at) " +
+            "SELECT email, username, password_hash, created_at FROM unverified WHERE username = ?";
+    private  final static String DELETE_UNVERIFIED_ACCOUNT_SQL = "DELETE FROM unverified WHERE username = ?;";
 
 
-    public AccountHandlerImpl(DataSource dataSource) {
+
+    public AccountRepositoryImpl(DataSource dataSource) {
         super(dataSource);
     }
 
     @Override
-    public void save(NewAccount account) {
+    public void saveVerifiedAccount(String username) {
+
+    }
+
+    @Override
+    public void saveUnverified(NewAccount account) {
         try (Connection connection = createConnection();
              PreparedStatement stmt = connection.prepareStatement(SAVE_ACCOUNT_SQL)) {
             stmt.setString(1, account.email());
             stmt.setString(2, account.username());
             stmt.setString(3, account.passwordHash());
             stmt.setTimestamp(4, java.sql.Timestamp.valueOf(account.createdAt()));
+            stmt.setString(5, account.token());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new UnknownSqlException(e);
@@ -87,6 +95,7 @@ public class AccountHandlerImpl extends BaseConnection  implements AccountHandle
         try (Connection connection = createConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, field);
+            stmt.setString(2, field);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return 0 == rs.getInt(1);

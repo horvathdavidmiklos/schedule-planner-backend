@@ -1,18 +1,15 @@
 package com.scheduleplanner.core.createaccount;
 
 
-import com.scheduleplanner.common.email.EmailProperties;
-import com.scheduleplanner.common.email.EmailSender;
-import com.scheduleplanner.common.entity.EmailEntity;
 import com.scheduleplanner.core.createaccount.dto.AccountInDto;
-import com.scheduleplanner.gateway.store.AccountHandler;
+import com.scheduleplanner.gateway.store.AccountRepository;
 import com.scheduleplanner.secret.Encrypt;
-import com.scheduleplanner.common.entity.NewAccount;
 import com.scheduleplanner.common.exception.baseexception.handled.EmptyFieldException;
 import com.scheduleplanner.common.exception.baseexception.handled.NotSupportedFormatException;
 import com.scheduleplanner.common.exception.baseexception.handled.PasswordNotMatchingException;
 import com.scheduleplanner.common.exception.baseexception.handled.ValueNotUniqueException;
 import com.scheduleplanner.common.log.SensitiveData;
+import com.scheduleplanner.secret.TokenService;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -22,30 +19,39 @@ import static java.util.Objects.isNull;
 public class CreateAccountBusinessLogic {
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
     private static final String USERNAME_REGEX = "^[a-zA-Z0-9._]+$";
+    private static final long EXPIRATION_TIME_IN_MILLIS = 1000L * 60 * 60 * 24; // 1 day
 
-    private final AccountHandler accountHandler;
+    private final AccountRepository repositoryHandler;
     private final Encrypt encrypt;
-    private final EmailProperties emailProperties;
+    private final SendVerificationEmail sendVerificationEmail;
+    private final TokenService tokenService;
 
-    public CreateAccountBusinessLogic(AccountHandler accountHandler, Encrypt encrypt, EmailProperties emailProperties) {
-        this.accountHandler = accountHandler;
+    public CreateAccountBusinessLogic(AccountRepository repositoryHandler, Encrypt encrypt, SendVerificationEmail sendVerificationEmail,
+                                      TokenService tokenService) {
+        this.tokenService = tokenService;
+        this.repositoryHandler = repositoryHandler;
         this.encrypt = encrypt;
-        this.emailProperties = emailProperties;
+        this.sendVerificationEmail = sendVerificationEmail;
     }
 
-    public void runService(@SensitiveData AccountInDto dto) {
-        checkNonNull(dto);
-        checkRegex(dto);
-        checkUnique(dto);
-        passwordMatch(dto.password(),dto.passwordConfirmation());
+    public void runService(@SensitiveData AccountInDto accountDto) {
+        checkNonNull(accountDto);
+        checkRegex(accountDto);
+        checkUnique(accountDto);
+        passwordMatch(accountDto.password(),accountDto.passwordConfirmation());
+        var token = verify_token(accountDto.username());
         var account = new NewAccount()
-                .email(dto.email())
-                .passwordHash(passwordEncrypt(dto.password()))
-                .username(dto.username().toUpperCase())
-                .createdAt(LocalDateTime.now());
-        accountHandler.save(account);
-        var email = new EmailSender(new EmailEntity().subject("TÁRGY").to("horvathdavid.miklos@gmail.com").body("TESZT"),emailProperties);
-        email.send();
+                .email(accountDto.email())
+                .passwordHash(passwordEncrypt(accountDto.password()))
+                .username(accountDto.username().toUpperCase())
+                .createdAt(LocalDateTime.now())
+                .token(token);
+        sendVerificationEmail.send(accountDto.username(),accountDto.email(),token);
+        repositoryHandler.saveUnverified(account);
+    }
+
+    private String verify_token(String username){
+        return tokenService.generateToken(username,EXPIRATION_TIME_IN_MILLIS);
     }
 
     private void checkNonNull(AccountInDto dto) {
@@ -55,10 +61,10 @@ public class CreateAccountBusinessLogic {
     }
 
     private void checkUnique(AccountInDto dto) {
-        if (!accountHandler.isUniqueEmail(dto.email())) {
+        if (!repositoryHandler.isUniqueEmail(dto.email())) {
             throw new ValueNotUniqueException("EMAIL");
         }
-        if (!accountHandler.isUniqueUsername(dto.username().toUpperCase())) {
+        if (!repositoryHandler.isUniqueUsername(dto.username().toUpperCase())) {
             throw new ValueNotUniqueException("USERNAME");
         }
     }
@@ -67,7 +73,7 @@ public class CreateAccountBusinessLogic {
         Pattern pattern = Pattern.compile(EMAIL_REGEX);
         Matcher matcher = pattern.matcher(dto.email());
         if (!matcher.matches()) {
-            throw new NotSupportedFormatException("EMAIL"); //TODO validation with email,
+            throw new NotSupportedFormatException("EMAIL");
         }
         pattern = Pattern.compile(USERNAME_REGEX);
         matcher = pattern.matcher(dto.username());

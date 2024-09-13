@@ -23,3 +23,7 @@ email:
   host: ${email.host}
   adress: ${email.adress}
   password: ${email.password}
+
+domain-name: ${domain.name}
+
+application-name: ${application.name}

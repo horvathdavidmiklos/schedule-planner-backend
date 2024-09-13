@@ -1,12 +1,10 @@
 package com.scheduleplanner.core.mock;
 
-import com.scheduleplanner.gateway.store.AccountHandler;
-import com.scheduleplanner.common.entity.Account;
-import com.scheduleplanner.common.entity.NewAccount;
+import com.scheduleplanner.gateway.store.AccountRepository;
 import mockhelper.CallChecker;
 
 
-public class AccountHandlerFake implements AccountHandler {
+public class AccountRepositoryFake implements AccountRepository {
     public enum AccounHandlerMethod {
         SAVE,
         IS_UNIQUE_USERNAME,
@@ -17,12 +15,12 @@ public class AccountHandlerFake implements AccountHandler {
 
     public CallChecker<AccounHandlerMethod> callChecker;
 
-    public AccountHandlerFake() {
+    public AccountRepositoryFake() {
         callChecker = new CallChecker<>();
     }
 
     @Override
-    public void save(NewAccount account) {
+    public void saveUnverified(NewAccount account) {
         callChecker.addCall(AccounHandlerMethod.SAVE, account);
     }
 

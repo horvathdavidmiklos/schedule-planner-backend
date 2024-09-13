@@ -1,8 +1,6 @@
 package integrationtest;
 
-import com.scheduleplanner.gateway.store.AccountHandler;
-import com.scheduleplanner.common.entity.Account;
-import com.scheduleplanner.common.entity.NewAccount;
+import com.scheduleplanner.gateway.store.AccountRepository;
 import integrationtest.mock.DataStructureFake;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,13 +8,13 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import com.scheduleplanner.gateway.store.AccountHandlerImpl;
+import com.scheduleplanner.gateway.store.AccountRepositoryImpl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class AccountHandlerIntegrationTest {
-    private AccountHandler accountHandler;
+class accountRepositoryIntegrationTest {
+    private AccountRepository accountRepository;
 
     private static final String TEST_USER = "TEST_USER";
     private static final String TEST_EMAIL = "test@example.com";
@@ -29,7 +27,7 @@ class AccountHandlerIntegrationTest {
     @BeforeEach
     void setup(){
         H2DbHelper.createAll(DataStructureFake.createConnection());
-        accountHandler = new AccountHandlerImpl(new DataStructureFake());
+        accountRepository = new AccountRepositoryImpl(new DataStructureFake());
     }
 
     @AfterEach
@@ -41,12 +39,12 @@ class AccountHandlerIntegrationTest {
     @Test void test_saveAccount() throws SQLException {
         checkAccountUniqueness(true,TEST_EMAIL,TEST_USER);
         checkAccountIsNullInEmptyDb();
-        accountHandler.save(createAccount());
+        accountRepository.saveUnverified(createAccount());
         checkAccountUniqueness(false,TEST_EMAIL,TEST_USER);
-        checkSavedAccount(accountHandler.findByEmail(TEST_EMAIL));
-        checkSavedAccount(accountHandler.findByUsername(TEST_USER));
+        checkSavedAccount(accountRepository.findByEmail(TEST_EMAIL));
+        checkSavedAccount(accountRepository.findByUsername(TEST_USER));
         checkAccountUniqueness(true,OTHER_TEST_EMAIL,OTHER_TEST_USER);
-        assertThat(accountHandler.findByUsername(OTHER_TEST_USER)).isNull();
+        assertThat(accountRepository.findByUsername(OTHER_TEST_USER)).isNull();
     }
 
     private void checkSavedAccount(Account account){
@@ -55,13 +53,13 @@ class AccountHandlerIntegrationTest {
     }
 
     private void checkAccountUniqueness(boolean isUniq,String email,String username){
-        assertThat(accountHandler.isUniqueEmail(email) == isUniq).isTrue();
-        assertThat(accountHandler.isUniqueUsername(username) == isUniq).isTrue();
+        assertThat(accountRepository.isUniqueEmail(email) == isUniq).isTrue();
+        assertThat(accountRepository.isUniqueUsername(username) == isUniq).isTrue();
     }
 
     private void checkAccountIsNullInEmptyDb(){
-        assertThat(accountHandler.findByEmail(TEST_EMAIL)).isNull();
-        assertThat(accountHandler.findByUsername(TEST_USER)).isNull();
+        assertThat(accountRepository.findByEmail(TEST_EMAIL)).isNull();
+        assertThat(accountRepository.findByUsername(TEST_USER)).isNull();
     }
 
     private NewAccount createAccount(){

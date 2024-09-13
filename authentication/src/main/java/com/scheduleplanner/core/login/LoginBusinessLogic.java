@@ -1,12 +1,10 @@
 package com.scheduleplanner.core.login;
 import com.scheduleplanner.core.login.dto.AccountInDto;
 import com.scheduleplanner.core.login.dto.TokenOutDto;
-import com.scheduleplanner.gateway.store.AccountHandler;
+import com.scheduleplanner.gateway.store.AccountRepository;
 import com.scheduleplanner.secret.Encrypt;
 import com.scheduleplanner.common.exception.baseexception.handled.WrongDataException;
 import com.scheduleplanner.secret.TokenService;
-import com.scheduleplanner.common.entity.Account;
-import com.scheduleplanner.common.log.LogMethod;
 import com.scheduleplanner.common.log.SensitiveData;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,11 +13,11 @@ public class LoginBusinessLogic {
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
     private static final long EXPIRATION_TIME_IN_MILLIS = 1000L * 60 * 60 * 24; // 1 day
 
-    private final AccountHandler accountHandler;
+    private final AccountRepository accountRepository;
     private final Encrypt encrypt;
     private final TokenService tokenService;
-    public LoginBusinessLogic(AccountHandler accountHandler, Encrypt encrypt, TokenService tokenService) {
-        this.accountHandler = accountHandler;
+    public LoginBusinessLogic(AccountRepository accountRepository, Encrypt encrypt, TokenService tokenService) {
+        this.accountRepository = accountRepository;
         this.encrypt = encrypt;
         this.tokenService = tokenService;
     }
@@ -43,8 +41,8 @@ public class LoginBusinessLogic {
 
     private Account findAccount(AccountInDto dto) {
         return  isEmail(dto) ?
-                accountHandler.findByEmail(dto.id()) :
-                accountHandler.findByUsername(dto.id());
+                accountRepository.findByEmail(dto.id()) :
+                accountRepository.findByUsername(dto.id());
     }
 
     private void checkAccountExists(Account account){
