@@ -2,7 +2,6 @@ package com.scheduleplanner.common.gateway.email;
 
 import com.scheduleplanner.common.exception.baseexception.handled.EmailAddressNotFound;
 
-import com.scheduleplanner.common.gateway.EmailConnector;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;

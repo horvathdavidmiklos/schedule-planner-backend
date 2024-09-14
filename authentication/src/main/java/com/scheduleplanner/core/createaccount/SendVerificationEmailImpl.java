@@ -1,7 +1,7 @@
 package com.scheduleplanner.core.createaccount;
 
 import com.scheduleplanner.common.gateway.ApplicationConfig;
-import com.scheduleplanner.common.gateway.EmailConnector;
+import com.scheduleplanner.common.gateway.email.EmailConnector;
 import com.scheduleplanner.common.gateway.email.EmailData;
 
 public class SendVerificationEmailImpl implements SendVerificationEmail {

@@ -1,7 +1,7 @@
 package com.scheduleplanner.rest.config;
 
 import com.scheduleplanner.common.gateway.ApplicationConfig;
-import com.scheduleplanner.common.gateway.EmailConnector;
+import com.scheduleplanner.common.gateway.email.EmailConnector;
 import com.scheduleplanner.common.gateway.email.EmailConfig;
 import com.scheduleplanner.common.gateway.email.EmailConnectorImpl;
 import com.scheduleplanner.core.createaccount.CreateAccountBusinessLogic;
