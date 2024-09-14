@@ -52,7 +52,7 @@
         <jib.maven.plugin.version>3.4.3</jib.maven.plugin.version>
         <buildnumber.maven.plugin>3.2.1</buildnumber.maven.plugin>
         <maven.resources.plugin.version>3.2.0</maven.resources.plugin.version>
-
+        <jakarta.version>2.0.1</jakarta.version>
         <buildNumber>1</buildNumber>
     </properties>
     <dependencies>
@@ -129,7 +129,7 @@
                     <excludedClasses>
                         <param>com.scheduleplanner.AuthenticationApplication</param>
                         <param>com.scheduleplanner.common.log.*</param>
-                        <param>com.scheduleplanner.*Config</param>
+                        <param>com.scheduleplanner.*Configuration</param>
                     </excludedClasses>
                     <targetTests>
                         <param>com.scheduleplanner.*</param>

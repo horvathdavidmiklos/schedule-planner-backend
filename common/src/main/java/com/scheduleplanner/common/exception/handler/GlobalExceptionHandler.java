@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HandledException.class)
     @ResponseBody
     public ResponseEntity<String> handledException(HandledException e) {
-        return new ResponseEntity<>(e.highlightedMessage, e.httpStatus);
+        return new ResponseEntity<>(e.getMessage(), e.httpStatus);
     }
 
 

@@ -36,7 +36,6 @@ public class CallChecker<T extends Enum<T>> {
 
         RecursiveComparisonConfiguration configuration = new RecursiveComparisonConfiguration();
         configuration.setIgnoreAllActualNullFields(true);
-
         assertThat(args)
                 .usingRecursiveFieldByFieldElementComparator(configuration)
                 .containsExactly(calledMethodTuple.getArgs());

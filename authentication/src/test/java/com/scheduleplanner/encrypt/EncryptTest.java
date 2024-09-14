@@ -1,4 +1,4 @@
-package com.scheduleplanner.secret;
+package com.scheduleplanner.encrypt;
 
 import com.scheduleplanner.common.exception.baseexception.handled.EncryptException;
 import org.junit.jupiter.api.BeforeEach;

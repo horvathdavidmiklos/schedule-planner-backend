@@ -1,4 +1,4 @@
-package com.scheduleplanner.secret;
+package com.scheduleplanner.encrypt;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import org.junit.jupiter.api.BeforeEach;

@@ -19,3 +19,11 @@ server:
     key-store-password: ${server-settings.ssl.key-store-password}
     key-store-type: ${server-settings.ssl.key-store-type}
     key-alias: ${server-settings.ssl.key-alias}
+email:
+  host: ${email.host}
+  address: ${email.address}
+  password: ${email.password}
+
+application:
+  name: ${application.name}
+  host: ${application.host}

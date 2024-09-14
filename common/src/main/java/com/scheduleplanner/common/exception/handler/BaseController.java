@@ -11,7 +11,7 @@ public class BaseController {
             runnable.run();
             return ResponseEntity.ok().body(response);
         }catch (HandledException handledException){
-            return new ResponseEntity<>(handledException.highlightedMessage, handledException.httpStatus);
+            return new ResponseEntity<>(handledException.getMessage(), handledException.httpStatus);
         }
     }
 
@@ -19,7 +19,7 @@ public class BaseController {
         try {
             return ResponseEntity.ok().body(supplier.get());
         }catch (HandledException handledException){
-            return new ResponseEntity<>(handledException.highlightedMessage, handledException.httpStatus);
+            return new ResponseEntity<>(handledException.getMessage(), handledException.httpStatus);
         }
     }
 }

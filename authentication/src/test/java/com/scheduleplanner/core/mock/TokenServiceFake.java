@@ -1,7 +1,7 @@
 package com.scheduleplanner.core.mock;
 
 
-import com.scheduleplanner.secret.TokenService;
+import com.scheduleplanner.encrypt.TokenService;
 import mockhelper.CallChecker;
 
 public class TokenServiceFake implements TokenService {
