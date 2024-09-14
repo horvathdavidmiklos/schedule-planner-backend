@@ -1,6 +1,6 @@
 package com.scheduleplanner.core.createaccount;
 
-import com.scheduleplanner.core.createaccount.dto.AccountInDto;
+import com.scheduleplanner.core.createaccount.dto.CreateAccountInDto;
 import com.scheduleplanner.core.mock.AccountServiceFake;
 import com.scheduleplanner.core.mock.EncryptFake;
 import com.scheduleplanner.common.exception.baseexception.handled.EmptyFieldException;
@@ -47,20 +47,20 @@ class CreateAccountBusinessLogicTest {
 
     @Test
     void emptyField() {
-        assertThatThrownBy(()->createAccountBusinessLogic.runService(new AccountInDto(TEST_USER,null,null,null)))
+        assertThatThrownBy(()->createAccountBusinessLogic.runService(new CreateAccountInDto(TEST_USER,null,null,null)))
                 .isExactlyInstanceOf(EmptyFieldException.class);
     }
 
     @Test
     void notMatchingRegexEmail(){
-        assertThatThrownBy(()->createAccountBusinessLogic.runService(new AccountInDto(TEST_USER,"WRONG",TEST_PASSWORD,TEST_PASSWORD)))
+        assertThatThrownBy(()->createAccountBusinessLogic.runService(new CreateAccountInDto(TEST_USER,"WRONG",TEST_PASSWORD,TEST_PASSWORD)))
                 .isExactlyInstanceOf(NotSupportedFormatException.class)
                 .hasMessage("EMAIL_WRONG_SYNTAX");
     }
 
     @Test
     void notMatchingRegexUsername(){
-        assertThatThrownBy(()->createAccountBusinessLogic.runService(new AccountInDto("WRONG@",TEST_EMAIL,TEST_PASSWORD,TEST_PASSWORD)))
+        assertThatThrownBy(()->createAccountBusinessLogic.runService(new CreateAccountInDto("WRONG@",TEST_EMAIL,TEST_PASSWORD,TEST_PASSWORD)))
                 .isExactlyInstanceOf(NotSupportedFormatException.class)
                 .hasMessage("USERNAME_WRONG_SYNTAX");
     }
@@ -68,7 +68,7 @@ class CreateAccountBusinessLogicTest {
     @Test
     void emailIsAlreadyTaken(){
         accountServiceFake.callChecker.addMethodCallingValue(AccountServiceFake.AccounHandlerMethod.FIND_BY_EMAIL,Optional.of(new Account().isVerified(true).email(TEST_EMAIL)));
-        assertThatThrownBy(()->createAccountBusinessLogic.runService(new AccountInDto(TEST_USER,TEST_EMAIL,TEST_PASSWORD,TEST_PASSWORD)))
+        assertThatThrownBy(()->createAccountBusinessLogic.runService(new CreateAccountInDto(TEST_USER,TEST_EMAIL,TEST_PASSWORD,TEST_PASSWORD)))
                 .isExactlyInstanceOf(ValueNotUniqueException.class)
                 .hasMessage("EMAIL_IS_ALREADY_TAKEN");
     }
@@ -78,7 +78,7 @@ class CreateAccountBusinessLogicTest {
         accountServiceFake.callChecker.addMethodCallingValue(AccountServiceFake.AccounHandlerMethod.FIND_BY_EMAIL,Optional.of(new Account().isVerified(false).email(TEST_EMAIL).username(TEST_USER)));
         accountServiceFake.callChecker.addMethodCallingValue(AccountServiceFake.AccounHandlerMethod.FIND_BY_USERNAME,Optional.of(new Account().isVerified(false).email(TEST_EMAIL).username(TEST_USER)));
         tokenServiceFake.callChecker.addMethodCallingValue(TokenServiceFake.TokenServiceMethod.GENERATE_TOKEN,"TOKEN");
-        assertThatCode(()->createAccountBusinessLogic.runService(new AccountInDto(TEST_USER,TEST_EMAIL,TEST_PASSWORD,TEST_PASSWORD)))
+        assertThatCode(()->createAccountBusinessLogic.runService(new CreateAccountInDto(TEST_USER,TEST_EMAIL,TEST_PASSWORD,TEST_PASSWORD)))
                 .doesNotThrowAnyException();
     }
 
@@ -86,7 +86,7 @@ class CreateAccountBusinessLogicTest {
     void usernameIsAlreadyTaken(){
         accountServiceFake.callChecker.addMethodCallingValue(AccountServiceFake.AccounHandlerMethod.FIND_BY_EMAIL,Optional.empty());
         accountServiceFake.callChecker.addMethodCallingValue(AccountServiceFake.AccounHandlerMethod.FIND_BY_USERNAME,Optional.of(new Account().email(TEST_EMAIL).username(TEST_USER)));
-        assertThatThrownBy(()->createAccountBusinessLogic.runService(new AccountInDto(TEST_USER,TEST_EMAIL,TEST_PASSWORD,TEST_PASSWORD)))
+        assertThatThrownBy(()->createAccountBusinessLogic.runService(new CreateAccountInDto(TEST_USER,TEST_EMAIL,TEST_PASSWORD,TEST_PASSWORD)))
                 .isExactlyInstanceOf(ValueNotUniqueException.class)
                 .hasMessage("USERNAME_IS_ALREADY_TAKEN");
     }
@@ -95,7 +95,7 @@ class CreateAccountBusinessLogicTest {
     void passwordUnMatch(){
         accountServiceFake.callChecker.addMethodCallingValue(AccountServiceFake.AccounHandlerMethod.FIND_BY_EMAIL,Optional.empty());
         accountServiceFake.callChecker.addMethodCallingValue(AccountServiceFake.AccounHandlerMethod.FIND_BY_USERNAME,Optional.empty());
-        assertThatThrownBy(()->createAccountBusinessLogic.runService(new AccountInDto(TEST_USER,TEST_EMAIL,TEST_PASSWORD,"PASSWORD_WRONG")))
+        assertThatThrownBy(()->createAccountBusinessLogic.runService(new CreateAccountInDto(TEST_USER,TEST_EMAIL,TEST_PASSWORD,"PASSWORD_WRONG")))
                 .isExactlyInstanceOf(PasswordNotMatchingException.class)
                 .hasMessage("PASSWORD_NOT_MATCHING");
     }
@@ -107,7 +107,7 @@ class CreateAccountBusinessLogicTest {
         tokenServiceFake.callChecker.addMethodCallingValue(TokenServiceFake.TokenServiceMethod.GENERATE_TOKEN,TOKEN_ENCODE);
         encryptFake.callChecker.addMethodCallingValue(CONVERT_TO_HASH,HASHED_PASSWORD);
 
-        assertThatCode(()->createAccountBusinessLogic.runService(new AccountInDto(TEST_USER,TEST_EMAIL,TEST_PASSWORD,TEST_PASSWORD)))
+        assertThatCode(()->createAccountBusinessLogic.runService(new CreateAccountInDto(TEST_USER,TEST_EMAIL,TEST_PASSWORD,TEST_PASSWORD)))
                 .doesNotThrowAnyException();
         encryptFake.callChecker.checkNextMethod(CONVERT_TO_HASH,TEST_PASSWORD);
         sendVerificationEmailFake.callChecker.checkNextMethod(SendVerificationEmailFake.Method.SEND,TEST_USER,TEST_EMAIL,TOKEN);

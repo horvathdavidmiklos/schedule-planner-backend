@@ -23,7 +23,7 @@ public class SendVerificationEmailImpl implements SendVerificationEmail {
 
     private String createEmailBody(String username, String token) {
         return "Dear " + username + "\n" +
-                "Thank you for registering with" + applicationConfig.getName() + "\n" +
+                "Thank you for registering with " + applicationConfig.getName() + "\n" +
                 "To complete your registration and activate your account, please verify your email address by clicking the link below:\n" +
                 "https://" + applicationConfig.getHost() + ":8443/schedule-planner/account/verify-email/" + token + "/" + username + "\n" +
                 "If you did not create an account with us, please ignore this email.\n\n" +

@@ -6,13 +6,13 @@ import org.springframework.http.ResponseEntity;
 import java.util.function.Supplier;
 
 public class BaseController {
-    protected ResponseEntity<String> handledException(Runnable runnable, String response) {
+    protected ResponseEntity<String> handledException(Runnable runnable, ResponseEntity<String> response) {
         try {
             runnable.run();
-            return ResponseEntity.ok().body(response);
         }catch (HandledException handledException){
-            return new ResponseEntity<>(handledException.getMessage(), handledException.httpStatus);
+            new ResponseEntity<>(handledException.getMessage(), handledException.httpStatus);
         }
+        return response;
     }
 
     protected <T> ResponseEntity<?> handledException(Supplier<T> supplier) {
