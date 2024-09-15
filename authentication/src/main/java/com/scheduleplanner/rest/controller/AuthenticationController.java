@@ -4,9 +4,11 @@ import com.scheduleplanner.common.exception.handler.BaseController;
 import com.scheduleplanner.common.log.LogMethod;
 import com.scheduleplanner.common.log.SensitiveData;
 import com.scheduleplanner.core.createaccount.CreateAccountBusinessLogic;
-import com.scheduleplanner.core.createaccount.dto.AccountInDto;
+import com.scheduleplanner.core.createaccount.dto.CreateAccountInDto;
 import com.scheduleplanner.core.login.LoginBusinessLogic;
+import com.scheduleplanner.core.login.dto.LoginAccountInDto;
 import com.scheduleplanner.core.verifiedaccount.VerifyAccountBusinessLogic;
+import com.sun.mail.iap.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,13 +30,13 @@ public class AuthenticationController extends BaseController {
 
     @LogMethod
     @PostMapping("/create")
-    public ResponseEntity<String> createAccount(@RequestBody @SensitiveData AccountInDto accountDto) {
-        return handledException(()->createAccount.runService(accountDto),"Account created successfully");
+    public ResponseEntity<String> createAccount(@RequestBody @SensitiveData CreateAccountInDto accountDto) {
+        return handledException(()->createAccount.runService(accountDto),ResponseEntity.ok("Account created successfully"));
     }
 
     @LogMethod
     @GetMapping("/login")
-    public ResponseEntity<?> loginAccount(@RequestBody @SensitiveData com.scheduleplanner.core.login.dto.AccountInDto accountDto) {
+    public ResponseEntity<?> loginAccount(@RequestBody @SensitiveData LoginAccountInDto accountDto) {
         return handledException(()->loginBusinessLogic.runService(accountDto));
     }
 
@@ -42,8 +44,7 @@ public class AuthenticationController extends BaseController {
     @LogMethod
     @GetMapping("/verify-email/{token}/{username}")
     public ResponseEntity<String> verifyEmail(@PathVariable String token, @PathVariable String username) {
-        handledException(()->verifyAccount.runService(token,username),"Account created successfully");
-        return ResponseEntity.ok("Email verification successful");
+        return handledException(()->verifyAccount.runService(token,username), ResponseEntity.ok().body("Email verification successful"));
     }
 
 }

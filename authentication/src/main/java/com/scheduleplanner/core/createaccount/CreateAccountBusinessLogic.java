@@ -6,7 +6,7 @@ import com.scheduleplanner.common.exception.baseexception.handled.NotSupportedFo
 import com.scheduleplanner.common.exception.baseexception.handled.PasswordNotMatchingException;
 import com.scheduleplanner.common.exception.baseexception.handled.ValueNotUniqueException;
 import com.scheduleplanner.common.log.SensitiveData;
-import com.scheduleplanner.core.createaccount.dto.AccountInDto;
+import com.scheduleplanner.core.createaccount.dto.CreateAccountInDto;
 import com.scheduleplanner.encrypt.Encrypt;
 import com.scheduleplanner.encrypt.TokenService;
 import com.scheduleplanner.store.Account;
@@ -42,7 +42,7 @@ public class CreateAccountBusinessLogic {
     }
 
 
-    public void runService(@SensitiveData AccountInDto accountDto) {
+    public void runService(@SensitiveData CreateAccountInDto accountDto) {
         checkNonNull(accountDto);
         checkRegex(accountDto);
         checkUnique(accountDto);
@@ -63,13 +63,13 @@ public class CreateAccountBusinessLogic {
         return URLEncoder.encode(token, StandardCharsets.UTF_8);
     }
 
-    private void checkNonNull(AccountInDto dto) {
+    private void checkNonNull(CreateAccountInDto dto) {
         if (isNull(dto) || isEmpty(dto.email()) || isEmpty(dto.username()) || isEmpty(dto.password()) || isEmpty(dto.passwordConfirmation())) {
             throw new EmptyFieldException();
         }
     }
 
-    private void checkUnique(AccountInDto dto) {
+    private void checkUnique(CreateAccountInDto dto) {
         Optional<Account> hasAccountByEmail = accountService.findByEmail(dto.email());
         Optional<Account> hasAccountByUsername = accountService.findByUsername(dto.username());
         if (hasAccountByEmail.isPresent() && hasAccountByEmail.get().email().equals(dto.email()) && hasAccountByEmail.get().isVerified()) {
@@ -81,7 +81,7 @@ public class CreateAccountBusinessLogic {
         }
     }
 
-    private void checkRegex(AccountInDto dto) {
+    private void checkRegex(CreateAccountInDto dto) {
         Pattern pattern = Pattern.compile(EMAIL_REGEX);
         Matcher matcher = pattern.matcher(dto.email());
         if (!matcher.matches()) {

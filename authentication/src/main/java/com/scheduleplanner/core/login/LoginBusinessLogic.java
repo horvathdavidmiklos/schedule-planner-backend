@@ -1,7 +1,7 @@
 package com.scheduleplanner.core.login;
 import com.scheduleplanner.common.exception.baseexception.handled.EmailAddressNotFound;
 import com.scheduleplanner.common.exception.baseexception.handled.UnverifiedAccountException;
-import com.scheduleplanner.core.login.dto.AccountInDto;
+import com.scheduleplanner.core.login.dto.LoginAccountInDto;
 import com.scheduleplanner.core.login.dto.TokenOutDto;
 import com.scheduleplanner.store.Account;
 import com.scheduleplanner.store.AccountService;
@@ -27,7 +27,7 @@ public class LoginBusinessLogic {
         this.tokenService = tokenService;
     }
 
-    public TokenOutDto runService(@SensitiveData AccountInDto dto) {
+    public TokenOutDto runService(@SensitiveData LoginAccountInDto dto) {
         var account = findAccount(dto).orElseThrow(()->new EmailAddressNotFound("EMAIL_ADDRESS_NOT_FOUND"));
         checkPassword(dto.password(), account.passwordHash());
         checkVerified(account.isVerified());
@@ -49,13 +49,13 @@ public class LoginBusinessLogic {
         }
     }
 
-    private Optional<Account> findAccount(AccountInDto dto) {
+    private Optional<Account> findAccount(LoginAccountInDto dto) {
         return  isEmail(dto) ?
                 accountService.findByEmail(dto.id()) :
                 accountService.findByUsername(dto.id());
     }
 
-    private boolean  isEmail(AccountInDto dto) {
+    private boolean  isEmail(LoginAccountInDto dto) {
         Pattern pattern = Pattern.compile(EMAIL_REGEX);
         Matcher matcher = pattern.matcher(dto.id());
         return matcher.matches();

@@ -4,6 +4,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static java.lang.Thread.sleep;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,6 +24,12 @@ class TokenServiceTest {
     @Test void wrongUsername(){
         var token = tokenService.generateToken(USER_NAME,1000);
         assertThat(tokenService.validateToken(token,USER_NAME+"WRONG")).isFalse();
+    }
+
+    @Test void tokenExpired() throws InterruptedException {
+        var token = tokenService.generateToken(USER_NAME,1);
+        Thread.sleep(100000);
+        assertThat(tokenService.validateToken(token,USER_NAME)).isFalse();
     }
 
     @Test
