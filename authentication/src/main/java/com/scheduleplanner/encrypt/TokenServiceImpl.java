@@ -1,37 +1,48 @@
 package com.scheduleplanner.encrypt;
 
+import com.scheduleplanner.common.exception.baseexception.handled.TokenException;
+import com.scheduleplanner.rest.config.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class TokenServiceImpl implements TokenService{
-    private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Generating a key
+@Service
+public class TokenServiceImpl implements TokenService {
 
+    private final SecretKey SECRET_KEY;
 
-    public String generateToken(String username,long expirationTime) {
+    public TokenServiceImpl(final JwtProperties jwtProperties) {
+        this.SECRET_KEY = Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtProperties.getSecretKey()));
+    }
+
+    public String generateToken(String username, long expirationTime) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username,expirationTime);
+        return createToken(claims, username, expirationTime);
     }
 
     public Boolean validateToken(String token, String username) {
-        final String tokenUsername = extractUsername(token);
-        return (tokenUsername.equals(username) && !isTokenExpired(token));
+        if(isTokenExpired(token)){
+            return false;
+        }
+        return extractUsername(token).equals(username);
     }
 
-    private String createToken(Map<String, Object> claims, String subject,long expirationTime) {
+    private String createToken(Map<String, Object> claims, String subject, long expirationTimeInMs) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(SECRET_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTimeInMs))
+                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -49,14 +60,22 @@ public class TokenServiceImpl implements TokenService{
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(SECRET_KEY)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            throw new TokenException("INVALID_OR_EXPIRED_TOKEN_EXCEPTION");
+        }
     }
 
     private Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        try {
+            return extractExpiration(token).before(new Date());
+        } catch (Exception e) {
+            return true;
+        }
     }
 }

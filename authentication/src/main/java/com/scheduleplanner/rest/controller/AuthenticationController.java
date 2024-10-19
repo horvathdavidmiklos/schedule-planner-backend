@@ -35,15 +35,15 @@ public class AuthenticationController extends BaseController {
     }
 
     @LogMethod
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> loginAccount(@RequestBody @SensitiveData LoginAccountInDto accountDto) {
         return handledException(()->loginBusinessLogic.runService(accountDto));
     }
 
 
     @LogMethod
-    @GetMapping("/verify-email/{token}/{username}")
-    public ResponseEntity<String> verifyEmail(@PathVariable String token, @PathVariable String username) {
+    @GetMapping("/verify-email")
+    public ResponseEntity<String> verifyEmail(@RequestParam String token, @RequestParam String username) {
         return handledException(()->verifyAccount.runService(token,username), ResponseEntity.ok().body("Email verification successful"));
     }
 

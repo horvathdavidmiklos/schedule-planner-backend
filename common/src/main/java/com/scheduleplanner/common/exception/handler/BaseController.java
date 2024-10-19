@@ -10,7 +10,7 @@ public class BaseController {
         try {
             runnable.run();
         }catch (HandledException handledException){
-            new ResponseEntity<>(handledException.getMessage(), handledException.httpStatus);
+            return new ResponseEntity<>(handledException.getMessage(), handledException.httpStatus);
         }
         return response;
     }

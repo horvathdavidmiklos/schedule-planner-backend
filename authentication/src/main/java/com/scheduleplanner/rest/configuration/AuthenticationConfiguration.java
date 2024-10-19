@@ -1,4 +1,4 @@
-package com.scheduleplanner.rest.config;
+package com.scheduleplanner.rest.configuration;
 
 import com.scheduleplanner.common.gateway.ApplicationConfig;
 import com.scheduleplanner.common.gateway.email.EmailConnector;
@@ -13,6 +13,7 @@ import com.scheduleplanner.encrypt.Encrypt;
 import com.scheduleplanner.encrypt.EncryptImpl;
 import com.scheduleplanner.encrypt.TokenService;
 import com.scheduleplanner.encrypt.TokenServiceImpl;
+import com.scheduleplanner.rest.config.JwtProperties;
 import com.scheduleplanner.store.AccountRepository;
 import com.scheduleplanner.store.AccountService;
 import com.scheduleplanner.store.AccountServiceImpl;
@@ -51,7 +52,7 @@ public class AuthenticationConfiguration {
 
     @Bean
     public TokenService tokenService() {
-        return new TokenServiceImpl();
+        return new TokenServiceImpl(jwtProperties());
     }
 
     @Bean
@@ -62,6 +63,13 @@ public class AuthenticationConfiguration {
     @Bean
     public EmailConnector emailConnector(EmailConfig emailProperties) {
         return new EmailConnectorImpl(emailProperties);
+    }
+
+
+    @Bean
+    @ConfigurationProperties(prefix = "jwt")
+    public JwtProperties jwtProperties() {
+        return new JwtProperties();
     }
 
     @Bean

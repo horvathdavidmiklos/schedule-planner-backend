@@ -1,6 +1,6 @@
 package com.scheduleplanner.core.verifiedaccount;
 
-import com.scheduleplanner.common.exception.baseexception.handled.TokenExpiredException;
+import com.scheduleplanner.common.exception.baseexception.handled.TokenException;
 import com.scheduleplanner.encrypt.TokenService;
 import com.scheduleplanner.store.AccountService;
 
@@ -22,7 +22,7 @@ public class VerifyAccountBusinessLogic {
         if(tokenService.validateToken(token,userName)){
             accountService.verifyAccount(userName);
         }else{
-            throw new TokenExpiredException("TOKEN_EXPIRED");
+            throw new TokenException("INVALID_OR_EXPIRED_TOKEN_EXCEPTION");
         }
     }
 }

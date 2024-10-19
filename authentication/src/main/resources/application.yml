@@ -24,6 +24,10 @@ email:
   address: ${email.address}
   password: ${email.password}
 
+jwt:
+  secret-key: ${security.key}
+
 application:
   name: ${application.name}
   host: ${application.host}
+
