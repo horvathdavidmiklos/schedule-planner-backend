@@ -1,7 +1,5 @@
 package com.scheduleplanner.store;
 
-import com.scheduleplanner.common.exception.baseexception.unhandled.UnknownException;
-
 import java.util.Optional;
 
 public interface AccountService {

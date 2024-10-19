@@ -1,8 +1,7 @@
 package com.scheduleplanner.store;
 
-import com.scheduleplanner.common.exception.baseexception.unhandled.UnknownException;
+import com.scheduleplanner.exception.baseexception.unhandled.UnknownException;
 import com.scheduleplanner.core.mock.AccountRepositoryFake;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

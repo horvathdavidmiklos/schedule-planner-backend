@@ -1,9 +1,9 @@
 package com.scheduleplanner.rest.configuration;
 
-import com.scheduleplanner.common.gateway.ApplicationConfig;
-import com.scheduleplanner.common.gateway.email.EmailConnector;
-import com.scheduleplanner.common.gateway.email.EmailConfig;
-import com.scheduleplanner.common.gateway.email.EmailConnectorImpl;
+import com.scheduleplanner.rest.config.ApplicationProperties;
+import com.scheduleplanner.gateway.email.EmailConnector;
+import com.scheduleplanner.rest.config.EmailProperties;
+import com.scheduleplanner.gateway.email.EmailConnectorImpl;
 import com.scheduleplanner.core.createaccount.CreateAccountBusinessLogic;
 import com.scheduleplanner.core.createaccount.SendVerificationEmail;
 import com.scheduleplanner.core.createaccount.SendVerificationEmailImpl;
@@ -56,12 +56,12 @@ public class AuthenticationConfiguration {
     }
 
     @Bean
-    public SendVerificationEmail sendVerificationEmail(EmailConnector emailConnector, ApplicationConfig applicationConfig) {
+    public SendVerificationEmail sendVerificationEmail(EmailConnector emailConnector, ApplicationProperties applicationConfig) {
         return new SendVerificationEmailImpl(emailConnector,applicationConfig);
     }
 
     @Bean
-    public EmailConnector emailConnector(EmailConfig emailProperties) {
+    public EmailConnector emailConnector(EmailProperties emailProperties) {
         return new EmailConnectorImpl(emailProperties);
     }
 
@@ -74,15 +74,15 @@ public class AuthenticationConfiguration {
 
     @Bean
     @ConfigurationProperties(prefix = "email")
-    public EmailConfig emailProperties() {
-        return new EmailConfig();
+    public EmailProperties emailProperties() {
+        return new EmailProperties();
     }
 
 
     @Bean
     @ConfigurationProperties(prefix = "application")
-    public ApplicationConfig applicationName() {
-        return new ApplicationConfig();
+    public ApplicationProperties applicationName() {
+        return new ApplicationProperties();
     }
 
 }

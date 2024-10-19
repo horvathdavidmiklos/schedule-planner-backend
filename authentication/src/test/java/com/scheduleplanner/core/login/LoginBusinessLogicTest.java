@@ -1,11 +1,9 @@
 package com.scheduleplanner.core.login;
 
-import com.mysql.cj.log.Log;
-import com.scheduleplanner.common.exception.baseexception.handled.EmailAddressNotFound;
-import com.scheduleplanner.common.exception.baseexception.handled.UnverifiedAccountException;
-import com.scheduleplanner.common.exception.baseexception.handled.WrongDataException;
+import com.scheduleplanner.exception.baseexception.handled.EmailAddressNotFound;
+import com.scheduleplanner.exception.baseexception.handled.UnverifiedAccountException;
+import com.scheduleplanner.exception.baseexception.handled.WrongDataException;
 import com.scheduleplanner.core.login.dto.LoginAccountInDto;
-import com.scheduleplanner.core.login.dto.TokenOutDto;
 import com.scheduleplanner.core.mock.AccountServiceFake;
 import com.scheduleplanner.core.mock.EncryptFake;
 import com.scheduleplanner.core.mock.TokenServiceFake;

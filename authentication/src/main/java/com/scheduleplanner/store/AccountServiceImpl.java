@@ -1,6 +1,6 @@
 package com.scheduleplanner.store;
 
-import com.scheduleplanner.common.exception.baseexception.unhandled.UnknownException;
+import com.scheduleplanner.exception.baseexception.unhandled.UnknownException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

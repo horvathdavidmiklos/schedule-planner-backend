@@ -1,13 +1,11 @@
 package com.scheduleplanner.core.createaccount;
 
-import com.scheduleplanner.common.gateway.ApplicationConfig;
+import com.scheduleplanner.rest.config.ApplicationProperties;
 import com.scheduleplanner.core.mock.EmailConnectorFake;
-import org.assertj.core.api.AbstractBigDecimalAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class SendVerificationEmailImplTest {
     private SendVerificationEmailImpl sendVerificationEmail;
@@ -16,7 +14,7 @@ class SendVerificationEmailImplTest {
     @BeforeEach
     void setUp() {
         emailConnectorFake = new EmailConnectorFake();
-        ApplicationConfig applicationConfig = new ApplicationConfig();
+        ApplicationProperties applicationConfig = new ApplicationProperties();
         applicationConfig.setHost("[HOST]");
         applicationConfig.setName("[NAME]");
         sendVerificationEmail = new SendVerificationEmailImpl(emailConnectorFake, applicationConfig);

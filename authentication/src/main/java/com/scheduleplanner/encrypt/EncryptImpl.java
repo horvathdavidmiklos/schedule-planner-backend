@@ -1,6 +1,6 @@
 package com.scheduleplanner.encrypt;
 
-import com.scheduleplanner.common.exception.baseexception.handled.EncryptException;
+import com.scheduleplanner.exception.baseexception.handled.EncryptException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class EncryptImpl implements Encrypt {

@@ -1,6 +1,6 @@
 package com.scheduleplanner.core.verifiedaccount;
 
-import com.scheduleplanner.common.exception.baseexception.handled.TokenException;
+import com.scheduleplanner.exception.baseexception.handled.TokenException;
 import com.scheduleplanner.core.mock.AccountServiceFake;
 import com.scheduleplanner.core.mock.TokenServiceFake;
 import org.junit.jupiter.api.BeforeEach;

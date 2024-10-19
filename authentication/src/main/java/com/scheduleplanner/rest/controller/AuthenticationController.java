@@ -1,14 +1,13 @@
 package com.scheduleplanner.rest.controller;
 
-import com.scheduleplanner.common.exception.handler.BaseController;
-import com.scheduleplanner.common.log.LogMethod;
-import com.scheduleplanner.common.log.SensitiveData;
+import com.scheduleplanner.exception.handler.BaseController;
+import com.scheduleplanner.log.LogMethod;
+import com.scheduleplanner.log.SensitiveData;
 import com.scheduleplanner.core.createaccount.CreateAccountBusinessLogic;
 import com.scheduleplanner.core.createaccount.dto.CreateAccountInDto;
 import com.scheduleplanner.core.login.LoginBusinessLogic;
 import com.scheduleplanner.core.login.dto.LoginAccountInDto;
 import com.scheduleplanner.core.verifiedaccount.VerifyAccountBusinessLogic;
-import com.sun.mail.iap.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

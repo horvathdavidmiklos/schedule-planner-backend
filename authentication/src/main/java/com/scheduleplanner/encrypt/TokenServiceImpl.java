@@ -1,6 +1,6 @@
 package com.scheduleplanner.encrypt;
 
-import com.scheduleplanner.common.exception.baseexception.handled.TokenException;
+import com.scheduleplanner.exception.baseexception.handled.TokenException;
 import com.scheduleplanner.rest.config.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

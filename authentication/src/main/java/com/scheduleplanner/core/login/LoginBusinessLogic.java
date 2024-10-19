@@ -1,14 +1,14 @@
 package com.scheduleplanner.core.login;
-import com.scheduleplanner.common.exception.baseexception.handled.EmailAddressNotFound;
-import com.scheduleplanner.common.exception.baseexception.handled.UnverifiedAccountException;
+import com.scheduleplanner.exception.baseexception.handled.EmailAddressNotFound;
+import com.scheduleplanner.exception.baseexception.handled.UnverifiedAccountException;
 import com.scheduleplanner.core.login.dto.LoginAccountInDto;
 import com.scheduleplanner.core.login.dto.TokenOutDto;
 import com.scheduleplanner.store.Account;
 import com.scheduleplanner.store.AccountService;
 import com.scheduleplanner.encrypt.Encrypt;
-import com.scheduleplanner.common.exception.baseexception.handled.WrongDataException;
+import com.scheduleplanner.exception.baseexception.handled.WrongDataException;
 import com.scheduleplanner.encrypt.TokenService;
-import com.scheduleplanner.common.log.SensitiveData;
+import com.scheduleplanner.log.SensitiveData;
 
 import java.util.Optional;
 import java.util.regex.Matcher;

@@ -1,11 +1,11 @@
 package com.scheduleplanner.core.createaccount;
 
 
-import com.scheduleplanner.common.exception.baseexception.handled.EmptyFieldException;
-import com.scheduleplanner.common.exception.baseexception.handled.NotSupportedFormatException;
-import com.scheduleplanner.common.exception.baseexception.handled.PasswordNotMatchingException;
-import com.scheduleplanner.common.exception.baseexception.handled.ValueNotUniqueException;
-import com.scheduleplanner.common.log.SensitiveData;
+import com.scheduleplanner.exception.baseexception.handled.EmptyFieldException;
+import com.scheduleplanner.exception.baseexception.handled.NotSupportedFormatException;
+import com.scheduleplanner.exception.baseexception.handled.PasswordNotMatchingException;
+import com.scheduleplanner.exception.baseexception.handled.ValueNotUniqueException;
+import com.scheduleplanner.log.SensitiveData;
 import com.scheduleplanner.core.createaccount.dto.CreateAccountInDto;
 import com.scheduleplanner.encrypt.Encrypt;
 import com.scheduleplanner.encrypt.TokenService;
