@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/schedule-planner/account")
+@RequestMapping("app/v1/schedule-planner/account")
 public class AuthenticationController extends BaseController {
     private final CreateAccountService createAccount;
     private final LoginService loginBusinessLogic;
