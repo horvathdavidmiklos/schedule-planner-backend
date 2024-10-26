@@ -1,9 +1,9 @@
-package com.scheduleplanner.common.repository;
+package com.schedule_planner.common.repository;
 
 import com.mysql.cj.jdbc.ConnectionImpl;
-import com.scheduleplanner.common.exception.baseexception.unhandled.GatewayTimeoutException;
-import com.scheduleplanner.common.repository.mock.ConnectionFake;
-import com.scheduleplanner.common.repository.mock.DataStructureFake;
+import com.schedule_planner.common.exception.baseexception.unhandled.GatewayTimeoutException;
+import com.schedule_planner.common.repository.mock.ConnectionFake;
+import com.schedule_planner.common.repository.mock.DataStructureFake;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

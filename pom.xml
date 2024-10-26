@@ -33,7 +33,6 @@
     <modules>
         <module>authentication</module>
         <module>planning-core</module>
-        <module>common</module>
     </modules>
     <properties>
         <application.version>0.0.1-${buildNumber}</application.version>
@@ -46,7 +45,6 @@
         <pitest.version>1.16.1</pitest.version>
         <pitest.unit5.plugin.version>1.2.1</pitest.unit5.plugin.version>
         <maven.compiler.version>3.13.0</maven.compiler.version>
-        <flyway.maven.plugin.version>10.16.0</flyway.maven.plugin.version>
         <spring.security.version>6.3.1</spring.security.version>
         <javax.annotation.api.version>1.3.2</javax.annotation.api.version>
         <jib.maven.plugin.version>3.4.3</jib.maven.plugin.version>
@@ -124,15 +122,15 @@
                 <version>${pitest.version}</version>
                 <configuration>
                     <targetClasses>
-                        <param>com.scheduleplanner.*</param>
+                        <param>com.schedule_planner.*</param>
                     </targetClasses>
                     <excludedClasses>
-                        <param>com.scheduleplanner.AuthenticationApplication</param>
-                        <param>com.scheduleplanner.common.log.*</param>
-                        <param>com.scheduleplanner.*Configuration</param>
+                        <param>com.schedule_planner.AuthenticationApplication</param>
+                        <param>com.schedule_planner.common.log.*</param>
+                        <param>com.schedule_planner.*Configuration</param>
                     </excludedClasses>
                     <targetTests>
-                        <param>com.scheduleplanner.*</param>
+                        <param>com.schedule_planner.*</param>
                         <param>integrationtest.*</param>
                     </targetTests>
                 </configuration>

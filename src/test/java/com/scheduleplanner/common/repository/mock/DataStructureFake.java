@@ -1,4 +1,4 @@
-package com.scheduleplanner.common.repository.mock;
+package com.schedule_planner.common.repository.mock;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;

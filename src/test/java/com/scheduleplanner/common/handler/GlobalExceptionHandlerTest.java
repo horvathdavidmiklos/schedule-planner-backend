@@ -1,8 +1,8 @@
-package com.scheduleplanner.common.handler;
+package com.schedule_planner.common.handler;
 
-import com.scheduleplanner.common.exception.baseexception.handled.HandledException;
-import com.scheduleplanner.common.exception.baseexception.unhandled.GatewayTimeoutException;
-import com.scheduleplanner.common.exception.handler.GlobalExceptionHandler;
+import com.schedule_planner.common.exception.baseexception.handled.HandledException;
+import com.schedule_planner.common.exception.baseexception.unhandled.GatewayTimeoutException;
+import com.schedule_planner.common.exception.handler.GlobalExceptionHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
