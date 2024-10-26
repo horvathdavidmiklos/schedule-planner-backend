@@ -1,8 +1,10 @@
 package com.schedule_planner.core.create_account.dto;
 
+import com.schedule_planner.log.SensitiveData;
+
 public record CreateAccountInDto(String username,
-                                 String email,
-                                 String nickname,
-                                 String password,
-                                 String passwordConfirmation) {
+                                 @SensitiveData String email,
+                                 @SensitiveData String nickname,
+                                 @SensitiveData String password,
+                                 @SensitiveData String passwordConfirmation) {
 }

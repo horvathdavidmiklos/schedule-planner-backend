@@ -14,22 +14,34 @@ public class AccountServiceImpl implements AccountService {
         this.accountRepository = accountRepository;
     }
 
+    @Override
     public Optional<Account> findByEmail(String email) {
         return accountRepository.findByEmail(email);
     }
 
+    @Override
     public Optional<Account> findByUsername(String username) {
         return accountRepository.findByUsername(username);
     }
 
+    @Override
     public void save(Account account){
         accountRepository.save(account);
     }
 
+    @Override
     public void verifyAccount(String username){
         var account = findByUsername(username).orElseThrow(()-> new UnknownException("ACCOUNT_NOT_FOUND"));
         account.isVerified(true);
         accountRepository.save(account);
+    }
+
+    @Override
+    public void updateAccountByUsername(String username, Account updatedAccount) {
+        accountRepository.findByUsername(username).ifPresent(existingAccount -> {
+            accountRepository.delete(existingAccount);
+            accountRepository.save(updatedAccount);
+        });
     }
 
 }

@@ -1,6 +1,8 @@
 package com.schedule_planner.core.login.dto;
 
+import com.schedule_planner.log.SensitiveData;
+
 public record LoginAccountInDto(
-        String id,  //email or username
-        String password) {
+        @SensitiveData String id,  //email or username
+        @SensitiveData String password) {
 }

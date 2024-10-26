@@ -1,4 +1,4 @@
-package com.schedule_planner.encrypt;
+package com.schedule_planner.util.secret;
 
 import com.schedule_planner.exception.baseexception.handled.EncryptException;
 import org.springframework.security.crypto.bcrypt.BCrypt;

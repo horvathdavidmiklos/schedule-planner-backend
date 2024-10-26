@@ -1,4 +1,4 @@
-package com.schedule_planner.gateway.email;
+package com.schedule_planner.util.email;
 
 import lombok.Getter;
 import lombok.Setter;

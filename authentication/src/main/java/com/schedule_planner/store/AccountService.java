@@ -11,4 +11,5 @@ public interface AccountService {
     void save(Account account);
 
     void verifyAccount(String username);
+    void updateAccountByUsername(String username, Account updatedAccount);
 }

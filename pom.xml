@@ -32,7 +32,6 @@
     <description>Schedule-planner</description>
     <modules>
         <module>authentication</module>
-        <module>planning-core</module>
     </modules>
     <properties>
         <application.version>0.0.1-${buildNumber}</application.version>

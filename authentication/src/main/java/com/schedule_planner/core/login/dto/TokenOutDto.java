@@ -1,4 +1,6 @@
 package com.schedule_planner.core.login.dto;
 
-public record TokenOutDto(String token) {
+import com.schedule_planner.log.SensitiveData;
+
+public record TokenOutDto(@SensitiveData String token) {
 }

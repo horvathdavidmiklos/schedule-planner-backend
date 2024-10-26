@@ -1,4 +1,4 @@
-package com.schedule_planner.encrypt;
+package com.schedule_planner.util.secret;
 
 public interface Encrypt {
     String hashPassword(String password);

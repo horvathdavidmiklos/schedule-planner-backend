@@ -1,15 +1,15 @@
 package com.schedule_planner.core.login;
-import com.schedule_planner.encrypt.TokenPurpose;
-import com.schedule_planner.exception.baseexception.handled.EmailAddressNotFound;
+import com.schedule_planner.util.secret.Encrypt;
+import com.schedule_planner.util.security.token.TokenExpirationTime;
+import com.schedule_planner.util.security.token.TokenPurpose;
 import com.schedule_planner.exception.baseexception.handled.UnverifiedAccountException;
 import com.schedule_planner.core.login.dto.LoginAccountInDto;
 import com.schedule_planner.core.login.dto.TokenOutDto;
 import com.schedule_planner.store.Account;
 import com.schedule_planner.store.AccountService;
-import com.schedule_planner.encrypt.Encrypt;
 import com.schedule_planner.exception.baseexception.handled.WrongDataException;
-import com.schedule_planner.encrypt.TokenService;
 import com.schedule_planner.log.SensitiveData;
+import com.schedule_planner.util.security.token.TokenService;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 
 public class LoginService {
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-    private static final long EXPIRATION_TIME_IN_MILLIS = 1000L * 60 * 60 * 24; // 1 day
 
     private final AccountService accountService;
     private final Encrypt encrypt;
@@ -29,7 +28,7 @@ public class LoginService {
     }
 
     public TokenOutDto runService(@SensitiveData LoginAccountInDto dto) {
-        var account = findAccount(dto).orElseThrow(()->new EmailAddressNotFound("EMAIL_ADDRESS_NOT_FOUND"));
+        var account = findAccount(dto).orElseThrow(WrongDataException::new);
         checkPassword(dto.password(), account.passwordHash());
         checkVerified(account.isVerified());
         return new TokenOutDto(generateToken(account.username()));
@@ -41,7 +40,7 @@ public class LoginService {
     }
 
     private String generateToken(String username){
-        return tokenService.generateToken(username,EXPIRATION_TIME_IN_MILLIS, TokenPurpose.LOGIN.getName());
+        return tokenService.generateToken(username, TokenExpirationTime.ONE_YEAR, TokenPurpose.LOGIN);
     }
 
     private void checkPassword(String password, String storedHashedPassword) {

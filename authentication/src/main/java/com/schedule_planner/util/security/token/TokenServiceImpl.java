@@ -1,4 +1,4 @@
-package com.schedule_planner.encrypt;
+package com.schedule_planner.util.security.token;
 
 import com.schedule_planner.exception.baseexception.handled.TokenException;
 import com.schedule_planner.rest.config.JwtProperties;
@@ -6,7 +6,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Base64;
@@ -23,19 +22,19 @@ public class TokenServiceImpl implements TokenService {
         this.SECRET_KEY = Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtProperties.getSecretKey()));
     }
 
-    public String generateToken(String username, long expirationTime,String purpose) {
+    @Override
+    public String generateToken(String username, TokenExpirationTime expirationTime,TokenPurpose purpose) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("purpose",purpose);
-        return createToken(claims, username, expirationTime);
+        claims.put("purpose", purpose);
+        return createToken(claims, username, expirationTime.getTime());
     }
 
-    public Boolean validateToken(String token, String username, String purpose) {
-        if(isTokenExpired(token)){
-            return false;
-        }
-        return extractUsername(token).equals(username) && extractPurpose(token).equals(purpose);
+    @Override
+    public Boolean validateToken(String token) {
+        return !(isTokenExpired(token));
     }
 
+    @Override
     public String extractPurpose(String token) {
         return extractClaim(token, claims -> claims.get("purpose", String.class));
     }
@@ -50,7 +49,8 @@ public class TokenServiceImpl implements TokenService {
                 .compact();
     }
 
-    private String extractUsername(String token) {
+    @Override
+    public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 

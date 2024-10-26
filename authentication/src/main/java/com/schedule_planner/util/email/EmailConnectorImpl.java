@@ -1,4 +1,4 @@
-package com.schedule_planner.gateway.email;
+package com.schedule_planner.util.email;
 
 
 import com.schedule_planner.exception.baseexception.handled.EmailAddressNotFound;

@@ -1,9 +1,8 @@
 package com.schedule_planner.core.create_account;
-
-import com.schedule_planner.encrypt.TokenPurpose;
+import com.schedule_planner.util.security.token.TokenPurpose;
 import com.schedule_planner.rest.config.ApplicationProperties;
-import com.schedule_planner.gateway.email.EmailConnector;
-import com.schedule_planner.gateway.email.EmailData;
+import com.schedule_planner.util.email.EmailConnector;
+import com.schedule_planner.util.email.EmailData;
 
 public class SendVerificationEmailImpl implements SendVerificationEmail {
     private final EmailConnector emailConnector;

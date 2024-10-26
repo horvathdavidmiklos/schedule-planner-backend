@@ -1,18 +1,16 @@
 package com.schedule_planner.core.create_account;
 
-
-import com.schedule_planner.encrypt.TokenPurpose;
+import com.schedule_planner.util.security.token.TokenPurpose;
 import com.schedule_planner.exception.baseexception.handled.EmptyFieldException;
 import com.schedule_planner.exception.baseexception.handled.NotSupportedFormatException;
 import com.schedule_planner.exception.baseexception.handled.PasswordNotMatchingException;
 import com.schedule_planner.exception.baseexception.handled.ValueNotUniqueException;
-import com.schedule_planner.log.SensitiveData;
 import com.schedule_planner.core.create_account.dto.CreateAccountInDto;
-import com.schedule_planner.encrypt.Encrypt;
-import com.schedule_planner.encrypt.TokenService;
+import com.schedule_planner.util.secret.Encrypt;
 import com.schedule_planner.store.Account;
 import com.schedule_planner.store.AccountService;
-import org.springframework.stereotype.Service;
+import com.schedule_planner.util.security.token.TokenExpirationTime;
+import com.schedule_planner.util.security.token.TokenService;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -27,7 +25,6 @@ import static org.apache.logging.log4j.util.Strings.isEmpty;
 public class CreateAccountService {
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
     private static final String USERNAME_REGEX = "^[a-zA-Z0-9._]+$";
-    private static final long EXPIRATION_TIME_IN_MILLIS = 1000L * 60 * 60 * 24; // 1 day
 
     private final AccountService accountService;
     private final Encrypt encrypt;
@@ -45,10 +42,10 @@ public class CreateAccountService {
     }
 
 
-    public void runService(@SensitiveData CreateAccountInDto accountDto) {
+    public void runService(CreateAccountInDto accountDto) {
         checkNonNull(accountDto);
         checkRegex(accountDto);
-        checkUnique(accountDto);
+        var optionalAccount = checkUnique(accountDto);
         passwordMatch(accountDto.password(), accountDto.passwordConfirmation());
         var account = new Account()
                 .email(accountDto.email())
@@ -59,11 +56,14 @@ public class CreateAccountService {
                 .nickname(accountDto.nickname());
         var token = createToken(accountDto.username());
         sendVerificationEmail.send(accountDto.username(), accountDto.email(), token);
-        accountService.save(account);
+
+        if (optionalAccount.isPresent())
+            accountService.updateAccountByUsername(optionalAccount.get().username(), account);
+        else accountService.save(account);
     }
 
     private String createToken(String username) {
-        var token = tokenService.generateToken(username, EXPIRATION_TIME_IN_MILLIS, TokenPurpose.EMAIL_VERIFICATION.getName());
+        var token = tokenService.generateToken(username, TokenExpirationTime.ONE_DAY, TokenPurpose.EMAIL_VERIFICATION);
         return URLEncoder.encode(token, StandardCharsets.UTF_8);
     }
 
@@ -73,21 +73,21 @@ public class CreateAccountService {
                 || isEmpty(dto.username())
                 || isEmpty(dto.password())
                 || isEmpty(dto.passwordConfirmation())
-                ||isEmpty(dto.nickname())) {
+                || isEmpty(dto.nickname())) {
             throw new EmptyFieldException();
         }
     }
 
-    private void checkUnique(CreateAccountInDto dto) {
+    private Optional<Account> checkUnique(CreateAccountInDto dto) {
         Optional<Account> hasAccountByEmail = accountService.findByEmail(dto.email());
         Optional<Account> hasAccountByUsername = accountService.findByUsername(dto.username());
-        if (hasAccountByEmail.isPresent() && hasAccountByEmail.get().email().equals(dto.email()) && hasAccountByEmail.get().isVerified()) {
+        if (hasAccountByEmail.isPresent() && hasAccountByEmail.get().isVerified()) {
             throw new ValueNotUniqueException("EMAIL_IS_ALREADY_TAKEN");
         }
-        if (hasAccountByUsername.isPresent()
-                && hasAccountByEmail.isEmpty()) {
+        if (hasAccountByUsername.isPresent()) {
             throw new ValueNotUniqueException("USERNAME_IS_ALREADY_TAKEN");
         }
+        return accountService.findByEmail(dto.email());
     }
 
     private void checkRegex(CreateAccountInDto dto) {
